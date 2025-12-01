@@ -14,6 +14,7 @@ import WasteTracker from './pages/WasteTracker';
 import RecyclingTips from './pages/RecyclingTips';
 import CollectionSchedule from './pages/CollectionSchedule';
 import EducationalResources from './pages/EducationalResources';
+import AboutUs from './pages/AboutUs';
 import Contact from './pages/Contact';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -62,6 +63,7 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/tips" element={<RecyclingTips />} />
               <Route path="/education" element={<EducationalResources />} />
+              <Route path="/about" element={<AboutUs />} />
               <Route path="/contact" element={<Contact />} />
               
               {/* Protected Routes */}
@@ -90,3 +92,6 @@ function App() {
 }
 
 export default App;
+
+
+
