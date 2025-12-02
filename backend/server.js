@@ -1,3 +1,4 @@
+// server.js (UPDATED - Add waste routes)
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -11,7 +12,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
-app.use('/api/waste', require('./routes/waste'));
+app.use('/api/waste', require('./routes/waste')); // NEW: Waste routes
 app.use('/api/collection', require('./routes/collection'));
 app.use('/api/education', require('./routes/education'));
 

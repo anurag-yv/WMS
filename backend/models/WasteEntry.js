@@ -1,3 +1,4 @@
+// models/WasteEntry.js (NEW FILE)
 const mongoose = require('mongoose');
 
 const wasteEntrySchema = new mongoose.Schema({
@@ -8,33 +9,36 @@ const wasteEntrySchema = new mongoose.Schema({
   },
   wasteType: {
     type: String,
-    enum: ['plastic', 'paper', 'glass', 'metal', 'organic', 'electronic', 'hazardous'],
     required: true
   },
   quantity: {
     type: Number,
-    required: true
+    required: true,
+    min: 0.1
   },
   unit: {
     type: String,
-    enum: ['kg', 'lb', 'items'],
+    enum: ['kg', 'lb', 'items', 'liters'],
     default: 'kg'
   },
-  location: {
-    latitude: Number,
-    longitude: Number,
-    address: String
-  },
-  collectionDate: {
+  date: {
     type: Date,
     required: true
   },
-  status: {
+  notes: {
     type: String,
-    enum: ['pending', 'scheduled', 'collected', 'recycled'],
-    default: 'pending'
+    trim: true
   },
-  notes: String
+  disposalMethod: {
+    type: String,
+    enum: ['recycling', 'composting', 'landfill', 'incineration', 'donation', 'reuse'],
+    default: 'recycling'
+  },
+  location: {
+    type: String,
+    enum: ['home', 'office', 'public', 'other'],
+    default: 'home'
+  }
 }, {
   timestamps: true
 });

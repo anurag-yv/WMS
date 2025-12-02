@@ -1,3 +1,4 @@
+// routes/auth.js (UPDATED - Include recyclingGoal in responses)
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -50,7 +51,8 @@ router.post('/register', async (req, res) => {
       name: name.trim(),
       email: email.toLowerCase().trim(),
       password: hashedPassword,
-      address: address || {}
+      address: address || {},
+      recyclingGoal: 20 // Default goal
     });
 
     await user.save();
@@ -68,7 +70,8 @@ router.post('/register', async (req, res) => {
         name: user.name,
         email: user.email,
         address: user.address,
-        role: user.role
+        role: user.role,
+        recyclingGoal: user.recyclingGoal
       }
     });
 
@@ -128,7 +131,8 @@ router.post('/login', async (req, res) => {
         name: user.name,
         email: user.email,
         address: user.address,
-        role: user.role
+        role: user.role,
+        recyclingGoal: user.recyclingGoal
       }
     });
 
@@ -169,7 +173,8 @@ router.post('/demo', async (req, res) => {
           city: 'Eco City',
           state: 'EC',
           zipCode: '12345'
-        }
+        },
+        recyclingGoal: 20
       });
 
       await user.save();
@@ -190,7 +195,8 @@ router.post('/demo', async (req, res) => {
         name: user.name,
         email: user.email,
         address: user.address,
-        role: user.role
+        role: user.role,
+        recyclingGoal: user.recyclingGoal
       }
     });
 
@@ -232,7 +238,14 @@ router.get('/me', async (req, res) => {
 
     res.json({
       success: true,
-      user
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        address: user.address,
+        role: user.role,
+        recyclingGoal: user.recyclingGoal
+      }
     });
 
   } catch (error) {

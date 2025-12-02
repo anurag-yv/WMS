@@ -1,563 +1,1096 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Bar, 
-  Doughnut, 
-  Line 
-} from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  ArcElement,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-} from 'chart.js';
-import {
-  TrendingUp,
-  TrendingDown,
-  Recycle,
-  Leaf,
-  Zap,
-  Truck,
-  Activity,
-  Clock,
-  Calendar,
-  Download,
-  RefreshCw,
-  ChevronDown,
-  CheckCircle,
-  AlertCircle,
-  Award,
-  Users,
-  MapPin,
-  BarChart3,
-  PieChart,
-  Sparkles,
-  Plus,
-  FileText,
-  Map,
-  Settings,
-  Bell,
-  X
-} from 'lucide-react';
-
-// Register ChartJS
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  ArcElement,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-);
-
-// Modal Component
-const Modal = ({ isOpen, onClose, title, children, type = 'schedule' }) => {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl max-w-md w-full max-h-[80vh] overflow-y-auto">
-        <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-          <h2 className="text-xl font-bold">{title}</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-            <X className="w-6 h-6" />
-          </button>
-        </div>
-        <div className="p-6">
-          {type === 'schedule' ? (
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Pickup Date</label>
-                <input type="date" className="w-full border border-gray-300 rounded-lg px-3 py-2" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Address</label>
-                <input type="text" placeholder="Enter address" className="w-full border border-gray-300 rounded-lg px-3 py-2" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Waste Type</label>
-                <select className="w-full border border-gray-300 rounded-lg px-3 py-2">
-                  <option>Household Waste</option>
-                  <option>Recyclables</option>
-                  <option>Organic</option>
-                </select>
-              </div>
-              <button className="w-full bg-gradient-to-r from-blue-500 to-emerald-500 text-white py-3 rounded-lg hover:shadow-lg transition-all">
-                Schedule Pickup
-              </button>
-            </div>
-          ) : (
-            <div>
-              <p className="text-gray-600 mb-4">Generating detailed report...</p>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span>Total Collections:</span>
-                  <span>45</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Recycling Success:</span>
-                  <span>78%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>CO₂ Impact:</span>
-                  <span>450 kg saved</span>
-                </div>
-              </div>
-              <button 
-                onClick={() => {
-                  alert('Report downloaded as PDF!');
-                  onClose();
-                }}
-                className="w-full mt-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg hover:shadow-lg transition-all"
-              >
-                <Download className="w-4 h-4 inline mr-2" />
-                Download Report
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+import { createUseStyles } from 'react-jss';
+// Create styles with JSS - Updated to match Home's color scheme (primary green #10b981, secondary blue #3b82f6, etc.)
+const useStyles = createUseStyles({
+  dashboard: {
+    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    backgroundColor: '#f9fafb',
+    color: '#374151',
+    minHeight: '100vh',
+    margin: 0,
+    padding: 0,
+    boxSizing: 'border-box',
+    overflowX: 'hidden',
+  },
+  topBar: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '1rem 2rem',
+    background: '#ffffff',
+    color: '#374151',
+    position: 'sticky',
+    top: 0,
+    zIndex: 100,
+    borderBottom: '1px solid #e5e7eb',
+    '@media (max-width: 768px)': {
+      flexDirection: 'column',
+      gap: '1rem',
+      padding: '1rem',
+    },
+  },
+  logoSection: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    gap: '1rem',
+    flex: 1,
+  },
+  logoIcon: {
+    fontSize: '2.5rem',
+    animation: '$rotate 3s linear infinite',
+    background: 'linear-gradient(135deg, #10b981, #3b82f6)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+  },
+  '@keyframes rotate': {
+    'from': { transform: 'rotate(0deg)' },
+    'to': { transform: 'rotate(360deg)' },
+  },
+  dateSection: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    padding: '0.5rem 1rem',
+    borderRadius: '8px',
+    fontSize: '0.9rem',
+  },
+  container: {
+    padding: '2rem',
+    maxWidth: '1400px',
+    margin: '0 auto',
+    '@media (max-width: 768px)': {
+      padding: '1rem',
+    },
+  },
+  alertSection: {
+    backgroundColor: '#fff3cd',
+    border: '1px solid #ffeaa7',
+    borderRadius: '12px',
+    padding: '1.5rem',
+    marginBottom: '2rem',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1rem',
+    animation: '$pulse 3s infinite',
+    '@media (max-width: 768px)': {
+      flexDirection: 'column',
+      textAlign: 'center',
+      padding: '1rem',
+    },
+  },
+  '@keyframes pulse': {
+    '0%': { boxShadow: '0 0 0 0 rgba(16, 185, 129, 0.4)' },
+    '70%': { boxShadow: '0 0 0 10px rgba(16, 185, 129, 0)' },
+    '100%': { boxShadow: '0 0 0 0 rgba(16, 185, 129, 0)' },
+  },
+  alertContent: {
+    flex: 1,
+    '& h3': {
+      margin: '0 0 0.5rem 0',
+      color: '#856404',
+      fontSize: '1.1rem',
+    },
+    '& p': {
+      margin: 0,
+      color: '#374151',
+      fontSize: '0.95rem',
+      opacity: 0.9,
+    },
+  },
+  alertButton: {
+    backgroundColor: '#10b981',
+    color: '#ffffff',
+    border: 'none',
+    padding: '0.75rem 1.5rem',
+    borderRadius: '8px',
+    fontWeight: 600,
+    cursor: 'pointer',
+    transition: 'background-color 0.3s',
+    whiteSpace: 'nowrap',
+    '&:hover': {
+      backgroundColor: '#059669',
+    },
+  },
+  mainGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+    gap: '1.5rem',
+    marginBottom: '2rem',
+    '@media (max-width: 768px)': {
+      gridTemplateColumns: '1fr',
+    },
+  },
+  statCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: '14px',
+    padding: '1.5rem',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    border: '1px solid #e5e7eb',
+    transition: 'transform 0.3s, box-shadow 0.3s',
+    '&:hover': {
+      transform: 'translateY(-5px)',
+      boxShadow: '0 8px 20px rgba(0, 0, 0, 0.15)',
+    },
+  },
+  statHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: '1rem',
+  },
+  statIcon: {
+    width: '50px',
+    height: '50px',
+    borderRadius: '12px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '1.5rem',
+  },
+  statTitle: {
+    fontSize: '0.95rem',
+    color: '#6b7280',
+    fontWeight: 600,
+    margin: 0,
+  },
+  statValue: {
+    fontSize: '2.2rem',
+    fontWeight: 800,
+    margin: '0.5rem 0',
+    color: '#10b981',
+  },
+  statTrend: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    padding: '0.25rem 0.75rem',
+    borderRadius: '20px',
+    fontSize: '0.85rem',
+    fontWeight: 600,
+    '&.positive': {
+      backgroundColor: 'rgba(16, 185, 129, 0.2)',
+      color: '#10b981',
+    },
+    '&.negative': {
+      backgroundColor: 'rgba(239, 68, 68, 0.2)',
+      color: '#ef4444',
+    },
+  },
+  chartSection: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))',
+    gap: '1.5rem',
+    marginBottom: '2rem',
+    '@media (max-width: 768px)': {
+      gridTemplateColumns: '1fr',
+    },
+  },
+  chartCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: '14px',
+    padding: '1.5rem',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    border: '1px solid #e5e7eb',
+  },
+  chartTitle: {
+    fontSize: '1.2rem',
+    fontWeight: 700,
+    color: '#10b981',
+    margin: '0 0 1.5rem 0',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+  },
+  barChart: {
+    display: 'flex',
+    alignItems: 'flex-end',
+    height: '200px',
+    gap: '0.75rem',
+    padding: '1rem 0',
+    position: 'relative',
+  },
+  bar: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  barFill: {
+    width: '100%',
+    borderRadius: '6px 6px 0 0',
+    transition: 'height 0.8s ease',
+  },
+  barLabel: {
+    marginTop: '0.5rem',
+    fontSize: '0.85rem',
+    color: '#6b7280',
+    fontWeight: 500,
+  },
+  pieChart: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '200px',
+    position: 'relative',
+    margin: '1rem 0',
+  },
+  pieLegend: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '1rem',
+    justifyContent: 'center',
+    marginTop: '1rem',
+  },
+  legendItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    fontSize: '0.9rem',
+  },
+  legendColor: {
+    width: '12px',
+    height: '12px',
+    borderRadius: '3px',
+  },
+  processSection: {
+    backgroundColor: '#ffffff',
+    borderRadius: '14px',
+    padding: '1.5rem',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    border: '1px solid #e5e7eb',
+    marginBottom: '2rem',
+  },
+  processGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+    gap: '1.5rem',
+    marginTop: '1.5rem',
+  },
+  processCard: {
+    textAlign: 'center',
+    padding: '1.5rem',
+    borderRadius: '12px',
+    backgroundColor: '#f9fafb',
+    transition: 'transform 0.3s',
+    '&:hover': {
+      transform: 'translateY(-3px)',
+    },
+  },
+  processIcon: {
+    width: '60px',
+    height: '60px',
+    borderRadius: '50%',
+    backgroundColor: '#e5e7eb',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '1.8rem',
+    margin: '0 auto 1rem',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+  },
+  processTitle: {
+    fontSize: '1rem',
+    fontWeight: 700,
+    color: '#10b981',
+    margin: '0 0 0.5rem 0',
+  },
+  processValue: {
+    fontSize: '1.8rem',
+    fontWeight: 800,
+    color: '#374151',
+    margin: '0 0 0.5rem 0',
+  },
+  zonesSection: {
+    backgroundColor: '#ffffff',
+    borderRadius: '14px',
+    padding: '1.5rem',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    border: '1px solid #e5e7eb',
+    marginBottom: '2rem',
+  },
+  zonesTable: {
+    width: '100%',
+    borderCollapse: 'collapse',
+    marginTop: '1rem',
+    '@media (max-width: 768px)': {
+      display: 'block',
+      overflowX: 'auto',
+    },
+  },
+  tableHeader: {
+    backgroundColor: '#e5e7eb',
+    '& th': {
+      padding: '1rem',
+      textAlign: 'left',
+      fontWeight: 600,
+      color: '#374151',
+      borderBottom: '2px solid #e5e7eb',
+      fontSize: '0.9rem',
+    },
+  },
+  tableRow: {
+    '&:nth-child(even)': {
+      backgroundColor: '#f9fafb',
+    },
+    '&:hover': {
+      backgroundColor: 'rgba(16, 185, 129, 0.1)',
+    },
+    '& td': {
+      padding: '1rem',
+      borderBottom: '1px solid #e5e7eb',
+      fontSize: '0.9rem',
+      color: '#374151',
+    },
+  },
+  statusBadge: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    padding: '0.4rem 0.8rem',
+    borderRadius: '20px',
+    fontSize: '0.85rem',
+    fontWeight: 600,
+    '&.active': {
+      backgroundColor: 'rgba(16, 185, 129, 0.2)',
+      color: '#10b981',
+    },
+    '&.maintenance': {
+      backgroundColor: 'rgba(245, 158, 11, 0.2)',
+      color: '#f59e0b',
+    },
+    '&.full': {
+      backgroundColor: 'rgba(239, 68, 68, 0.2)',
+      color: '#ef4444',
+    },
+  },
+  progressBar: {
+    width: '80px',
+    height: '6px',
+    backgroundColor: '#e5e7eb',
+    borderRadius: '3px',
+    overflow: 'hidden',
+    display: 'inline-block',
+    marginRight: '0.5rem',
+  },
+  progressFill: {
+    height: '100%',
+    borderRadius: '3px',
+  },
+  initiativesGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+    gap: '1.5rem',
+  },
+  initiativeCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: '14px',
+    padding: '1.5rem',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    border: '1px solid #e5e7eb',
+    transition: 'transform 0.3s, box-shadow 0.3s',
+    '&:hover': {
+      transform: 'translateY(-5px)',
+      boxShadow: '0 8px 20px rgba(0, 0, 0, 0.15)',
+    },
+  },
+  initiativeHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1rem',
+    marginBottom: '1rem',
+  },
+  initiativeIcon: {
+    fontSize: '2rem',
+  },
+  initiativeTitle: {
+    fontSize: '1.1rem',
+    fontWeight: 700,
+    color: '#10b981',
+    margin: 0,
+  },
+  initiativeDesc: {
+    color: '#6b7280',
+    fontSize: '0.95rem',
+    lineHeight: 1.6,
+    marginBottom: '1rem',
+  },
+  initiativeProgress: {
+    height: '8px',
+    backgroundColor: '#e5e7eb',
+    borderRadius: '4px',
+    overflow: 'hidden',
+    marginBottom: '0.5rem',
+  },
+  initiativeProgressFill: {
+    height: '100%',
+    borderRadius: '4px',
+    transition: 'width 0.5s ease',
+  },
+  initiativeStats: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    fontSize: '0.9rem',
+    color: '#6b7280',
+  },
+  timeFilter: {
+    display: 'flex',
+    gap: '0.5rem',
+    marginBottom: '1rem',
+    flexWrap: 'wrap',
+  },
+  filterButton: {
+    padding: '0.5rem 1rem',
+    border: '1px solid #e5e7eb',
+    backgroundColor: '#ffffff',
+    color: '#374151',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontSize: '0.9rem',
+    transition: 'all 0.3s',
+    '&:hover': {
+      backgroundColor: '#e5e7eb',
+    },
+    '&.active': {
+      backgroundColor: '#10b981',
+      color: '#ffffff',
+      borderColor: '#10b981',
+    },
+  },
+  impactGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+    gap: '1.5rem',
+    marginTop: '1.5rem',
+  },
+  impactCard: {
+    textAlign: 'center',
+    padding: '1.5rem',
+    borderRadius: '12px',
+    backgroundColor: '#f9fafb',
+  },
+  impactIcon: {
+    fontSize: '2rem',
+    marginBottom: '0.5rem',
+  },
+  impactValue: {
+    fontSize: '1.8rem',
+    fontWeight: 800,
+    color: '#10b981',
+    margin: '0.5rem 0',
+  },
+  impactLabel: {
+    fontSize: '0.9rem',
+    color: '#6b7280',
+    fontWeight: 500,
+  },
+  noData: {
+    textAlign: 'center',
+    padding: '3rem',
+    color: '#6b7280',
+    fontSize: '1rem',
+  },
+  tableContainer: {
+    overflowX: 'auto',
+  },
+});
+// Data for the dashboard - Updated wasteComposition colors to match theme
+const initialData = {
+  stats: {
+    totalWaste: 12458,
+    recyclingRate: 68,
+    landfillReduction: 42,
+    carbonOffset: 2850,
+    efficiency: 92,
+    activeVehicles: 47,
+  },
+  weeklyData: [
+    { day: 'Mon', organic: 120, recyclable: 80, hazardous: 20 },
+    { day: 'Tue', organic: 150, recyclable: 90, hazardous: 25 },
+    { day: 'Wed', organic: 130, recyclable: 85, hazardous: 22 },
+    { day: 'Thu', organic: 140, recyclable: 95, hazardous: 18 },
+    { day: 'Fri', organic: 160, recyclable: 100, hazardous: 30 },
+    { day: 'Sat', organic: 180, recyclable: 110, hazardous: 35 },
+    { day: 'Sun', organic: 100, recyclable: 70, hazardous: 15 },
+  ],
+  dailyData: [
+    { day: '8AM', organic: 20, recyclable: 15, hazardous: 5 },
+    { day: '10AM', organic: 25, recyclable: 18, hazardous: 6 },
+    { day: '12PM', organic: 30, recyclable: 20, hazardous: 8 },
+    { day: '2PM', organic: 35, recyclable: 22, hazardous: 7 },
+    { day: '4PM', organic: 28, recyclable: 19, hazardous: 9 },
+    { day: '6PM', organic: 22, recyclable: 16, hazardous: 4 },
+  ],
+  monthlyData: [
+    { day: 'Wk1', organic: 500, recyclable: 350, hazardous: 100 },
+    { day: 'Wk2', organic: 550, recyclable: 380, hazardous: 110 },
+    { day: 'Wk3', organic: 520, recyclable: 360, hazardous: 105 },
+    { day: 'Wk4', organic: 580, recyclable: 400, hazardous: 120 },
+  ],
+  yearlyData: [
+    { day: 'Q1', organic: 2000, recyclable: 1400, hazardous: 400 },
+    { day: 'Q2', organic: 2200, recyclable: 1500, hazardous: 450 },
+    { day: 'Q3', organic: 2100, recyclable: 1450, hazardous: 420 },
+    { day: 'Q4', organic: 2300, recyclable: 1600, hazardous: 480 },
+  ],
+  wasteComposition: [
+    { type: 'Organic', percentage: 45, color: '#10b981' },
+    { type: 'Recyclable', percentage: 30, color: '#3b82f6' },
+    { type: 'Hazardous', percentage: 10, color: '#ef4444' },
+    { type: 'Other', percentage: 15, color: '#6b7280' },
+  ],
+  collectionZones: [
+    { id: 1, zone: 'Downtown', status: 'active', fillLevel: 85, priority: 'High', nextCollection: 'Tomorrow 10:00 AM' },
+    { id: 2, zone: 'North District', status: 'active', fillLevel: 45, priority: 'Low', nextCollection: 'Tomorrow 9:00 AM' },
+    { id: 3, zone: 'Eastside', status: 'maintenance', fillLevel: 20, priority: 'Medium', nextCollection: 'June 15' },
+    { id: 4, zone: 'Westgate', status: 'active', fillLevel: 78, priority: 'High', nextCollection: 'Tomorrow 8:30 AM' },
+    { id: 5, zone: 'South Corridor', status: 'active', fillLevel: 60, priority: 'Medium', nextCollection: 'Tomorrow 11:00 AM' },
+  ],
+  initiatives: [
+    {
+      id: 1,
+      title: 'Smart Bin Deployment',
+      description: 'Installing IoT-enabled smart bins for real-time monitoring and optimized collection routes.',
+      icon: '📡',
+      progress: 65,
+      impact: 'Reduces collection costs by 30%'
+    },
+    {
+      id: 2,
+      title: 'Community Composting',
+      description: 'Establishing neighborhood composting centers to convert organic waste into fertilizer.',
+      icon: '🌱',
+      progress: 40,
+      impact: 'Diverts 15 tons/month from landfills'
+    },
+    {
+      id: 3,
+      title: 'E-Waste Recycling',
+      description: 'Quarterly collection events for electronics with certified data destruction.',
+      icon: '💻',
+      progress: 85,
+      impact: 'Processed 2,400 devices this year'
+    },
+  ],
+  environmentalImpact: {
+    treesSaved: 2850,
+    waterSaved: 4200000,
+    energySaved: 18500,
+    emissionsPrevented: 12400,
+  }
 };
-
-const Dashboard = () => {
-  const [timeRange, setTimeRange] = useState('month');
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [goalProgress, setGoalProgress] = useState(78);
-  const [showScheduleModal, setShowScheduleModal] = useState(false);
-  const [showReportModal, setShowReportModal] = useState(false);
-  const [alerts, setAlerts] = useState([
-    { id: 1, message: 'High recycling rate in Zone A!', type: 'success' },
-    { id: 2, message: 'Upcoming pickup in Zone B tomorrow', type: 'info' },
-    { id: 3, message: 'Low participation in Zone C', type: 'warning' }
-  ]);
-  const [recentPickups, setRecentPickups] = useState([
-    { id: 1, date: 'Nov 28', address: '123 Green St', type: 'Recyclables', status: 'Completed' },
-    { id: 2, date: 'Nov 25', address: '456 Eco Ave', type: 'Organic', status: 'In Progress' },
-    { id: 3, date: 'Nov 22', address: '789 Sustain Blvd', type: 'Household', status: 'Scheduled' }
-  ]);
-  const [selectedZone, setSelectedZone] = useState('All Zones');
-  const [routeData, setRouteData] = useState(null);
-
-  // Stats with more info
-  const stats = [
-    {
-      title: "Total Volume",
-      value: "1.2K kg",
-      change: "+12%",
-      positive: true,
-      icon: <Recycle className="w-5 h-5" />,
-      color: "from-blue-500 to-emerald-500",
-      detail: "Avg daily: 40kg"
-    },
-    {
-      title: "Recycle Ratio",
-      value: "78%",
-      change: "+5%",
-      positive: true,
-      icon: <Leaf className="w-5 h-5" />,
-      color: "from-emerald-500 to-green-500",
-      detail: "Target: 85%"
-    },
-    {
-      title: "Carbon Offset",
-      value: "450 kg",
-      change: "+18%",
-      positive: true,
-      icon: <Zap className="w-5 h-5" />,
-      color: "from-green-500 to-teal-500",
-      detail: "Trees saved: 2.5"
-    },
-    {
-      title: "Truck Utilization",
-      value: "94%",
-      change: "+3%",
-      positive: true,
-      icon: <Truck className="w-5 h-5" />,
-      color: "from-purple-500 to-pink-500",
-      detail: "Fuel saved: 15%"
-    }
-  ];
-
-  // Chart data
-  const barData = {
-    labels: ['Plastic', 'Paper', 'Organic', 'Glass', 'Metal', 'E-Waste'],
-    datasets: [{
-      data: [25, 35, 40, 15, 10, 5],
-      backgroundColor: [
-        'rgba(59, 130, 246, 0.8)',
-        'rgba(16, 185, 129, 0.8)',
-        'rgba(245, 158, 11, 0.8)',
-        'rgba(139, 92, 246, 0.8)',
-        'rgba(236, 72, 153, 0.8)',
-        'rgba(239, 68, 68, 0.8)'
-      ],
-      borderRadius: 8,
-      borderSkipped: false,
-    }]
-  };
-
-  const doughnutData = {
-    labels: ['Recycled', 'Composted', 'Energy', 'Landfill'],
-    datasets: [{
-      data: [45, 25, 15, 15],
-      backgroundColor: [
-        'rgba(16, 185, 129, 0.8)',
-        'rgba(59, 130, 246, 0.8)',
-        'rgba(245, 158, 11, 0.8)',
-        'rgba(239, 68, 68, 0.8)'
-      ],
-      borderWidth: 2,
-      hoverOffset: 4
-    }]
-  };
-
-  const lineData = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-    datasets: [{
-      label: 'Trend',
-      data: [65, 59, 80, 81, 56, 55, 40],
-      borderColor: 'rgb(59, 130, 246)',
-      backgroundColor: 'rgba(59, 130, 246, 0.1)',
-      fill: true,
-      tension: 0.4
-    }]
-  };
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'Monthly Performance'
-      }
-    },
-    scales: {
-      y: {
-        beginAtZero: true
-      }
-    }
-  };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setGoalProgress(prev => Math.min(prev + Math.random() * 1.5, 100));
-      // Simulate new alert
-      if (Math.random() > 0.7) {
-        setAlerts(prev => [...prev, { 
-          id: Date.now(), 
-          message: `New pickup completed in Zone ${Math.floor(Math.random() * 3) + 1}!`, 
-          type: 'success' 
-        }]);
-      }
-    }, 8000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleSchedulePickup = () => {
-    setShowScheduleModal(true);
-  };
-
-  const handleViewReport = () => {
-    setShowReportModal(true);
-  };
-
-  const handleRouteOptimizer = () => {
-    setRouteData({
-      distance: '45 km',
-      time: '2h 15m',
-      fuel: '12 L',
-      co2: '28 kg'
-    });
-    alert('Optimized route loaded – check map integration!');
-  };
-
-  const handleCloseModal = () => {
-    setShowScheduleModal(false);
-    setShowReportModal(false);
-  };
-
+// Custom Bar Chart Component - Updated colors to match theme
+const BarChart = ({ data, colors }) => {
+  const maxValue = Math.max(...data.map(item =>
+    item.organic + item.recyclable + item.hazardous
+  ));
+ 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-emerald-50 p-2 md:p-4 lg:p-6">
-      {/* Header */}
-      <header className="mb-6">
-        <div className="flex justify-between items-center mb-3">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-gray-800 via-blue-800 to-emerald-600 bg-clip-text text-transparent">
-              EcoTrack Dashboard
-            </h1>
-            <p className="text-gray-600 mt-1 text-sm md:text-base">Real-time sustainability metrics & operations</p>
-          </div>
-          <button 
-            onClick={() => setIsRefreshing(!isRefreshing)}
-            disabled={isRefreshing}
-            className="flex items-center space-x-2 bg-gradient-to-r from-emerald-500 to-blue-500 text-white px-3 py-2 rounded-lg hover:shadow-lg transition-all text-sm"
-          >
-            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-            <span>Live Update</span>
-          </button>
-        </div>
-
-        {/* Time Range */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          {['week', 'month', 'quarter', 'year'].map(range => (
-            <button
-              key={range}
-              onClick={() => setTimeRange(range)}
-              className={`px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm rounded-full transition-all border ${
-                timeRange === range
-                  ? 'bg-gradient-to-r from-emerald-500 to-blue-500 text-white border-transparent shadow-md'
-                  : 'bg-white text-gray-700 border-gray-300 hover:border-emerald-300'
-              }`}
-            >
-              {range.charAt(0).toUpperCase() + range.slice(1)}
-            </button>
-          ))}
-        </div>
-
-        {/* Goal Progress */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 md:p-6 shadow-lg mb-6">
-          <div className="flex justify-between items-center mb-3">
-            <h2 className="text-lg font-semibold flex items-center">
-              <Sparkles className="w-4 h-4 mr-2 text-emerald-500" />
-              Impact Goal
-            </h2>
-            <Bell className="w-5 h-5 text-gray-400 cursor-pointer hover:text-blue-500" onClick={() => alert('Notifications: 3 new alerts')} />
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-3xl md:text-4xl font-bold text-gray-900">{Math.round(goalProgress)}%</div>
-              <p className="text-gray-600 text-sm">Zero-Waste Target</p>
-            </div>
-            <div className="w-48 md:w-64 bg-gray-200 rounded-full h-2.5">
+    <div style={{ display: 'flex', alignItems: 'flex-end', height: '200px', gap: '10px', padding: '10px 0' }}>
+      {data.map((item, index) => {
+        const total = item.organic + item.recyclable + item.hazardous;
+        const organicHeight = (item.organic / maxValue) * 100;
+        const recyclableHeight = (item.recyclable / maxValue) * 100;
+        const hazardousHeight = (item.hazardous / maxValue) * 100;
+       
+        return (
+          <div key={index} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', height: '150px', justifyContent: 'flex-end', width: '100%' }}>
               <div
-                className="bg-gradient-to-r from-emerald-500 to-blue-500 h-2.5 rounded-full transition-all duration-1000"
-                style={{ width: `${goalProgress}%` }}
+                style={{
+                  height: `${hazardousHeight}%`,
+                  backgroundColor: colors.hazardous,
+                  width: '100%',
+                  borderRadius: '4px 4px 0 0',
+                }}
+              />
+              <div
+                style={{
+                  height: `${recyclableHeight}%`,
+                  backgroundColor: colors.recyclable,
+                  width: '100%',
+                }}
+              />
+              <div
+                style={{
+                  height: `${organicHeight}%`,
+                  backgroundColor: colors.organic,
+                  width: '100%',
+                  borderRadius: '0 0 4px 4px',
+                }}
               />
             </div>
+            <div style={{ marginTop: '8px', fontSize: '0.85rem', color: '#6b7280' }}>{item.day}</div>
           </div>
-          <p className="text-xs text-gray-500 mt-2">Next milestone: 85% by end of {timeRange}</p>
-        </div>
-      </header>
-
-      {/* Zone Selector */}
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Zone</label>
-        <select 
-          value={selectedZone} 
-          onChange={(e) => setSelectedZone(e.target.value)}
-          className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-48"
-        >
-          <option>All Zones</option>
-          <option>Zone A (Downtown)</option>
-          <option>Zone B (Suburbs)</option>
-          <option>Zone C (Industrial)</option>
-        </select>
-      </div>
-
-      {/* Alerts Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        {alerts.slice(-3).map(alert => (
-          <div key={alert.id} className={`p-3 rounded-lg text-sm ${
-            alert.type === 'success' ? 'bg-emerald-50 border-l-4 border-emerald-400' :
-            alert.type === 'warning' ? 'bg-yellow-50 border-l-4 border-yellow-400' :
-            'bg-blue-50 border-l-4 border-blue-400'
-          }`}>
-            <div className="flex items-center">
-              <AlertCircle className={`w-4 h-4 mr-2 ${alert.type === 'success' ? 'text-emerald-500' : alert.type === 'warning' ? 'text-yellow-500' : 'text-blue-500'}`} />
-              <span className="font-medium">{alert.message}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6">
-        {stats.map((stat, index) => (
-          <div key={index} className="bg-white/80 backdrop-blur-sm rounded-xl p-4 md:p-6 shadow-md hover:shadow-xl transition-shadow">
-            <div className="flex items-center justify-between mb-3">
-              <div className={`p-2 rounded-lg bg-gradient-to-r ${stat.color}`}>
-                {stat.icon}
-              </div>
-              <div className={`text-xs md:text-sm font-medium flex items-center ${
-                stat.positive ? 'text-emerald-600' : 'text-red-600'
-              }`}>
-                {stat.positive ? <TrendingUp className="w-3 h-3 mr-1" /> : <TrendingDown className="w-3 h-3 mr-1" />}
-                {stat.change} vs last
-              </div>
-            </div>
-            <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-1">{stat.title}</h3>
-            <p className="text-2xl md:text-3xl font-bold text-gray-900">{stat.value}</p>
-            <p className="text-xs text-gray-500 mt-1">{stat.detail}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* Charts Row 1 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6">
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 md:p-6 shadow-md">
-          <h3 className="text-lg font-semibold mb-3 flex items-center">
-            <BarChart3 className="w-4 h-4 mr-2" />
-            Material Breakdown
-          </h3>
-          <div className="h-64 md:h-72">
-            <Bar data={barData} options={options} />
-          </div>
-        </div>
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 md:p-6 shadow-md">
-          <h3 className="text-lg font-semibold mb-3 flex items-center">
-            <PieChart className="w-4 h-4 mr-2" />
-            Disposal Routes
-          </h3>
-          <div className="h-64 md:h-72 flex items-center justify-center">
-            <Doughnut data={doughnutData} options={options} />
-          </div>
-        </div>
-      </div>
-
-      {/* Recent Pickups Table */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 md:p-6 shadow-md mb-6">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold flex items-center">
-            <Calendar className="w-4 h-4 mr-2" />
-            Recent Pickups
-          </h3>
-          <button 
-            onClick={handleSchedulePickup}
-            className="flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-emerald-500 text-white px-3 py-2 rounded-lg text-sm hover:shadow-lg transition-all"
-          >
-            <Plus className="w-3 h-3" />
-            <span>New Pickup</span>
-          </button>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-gray-200">
-                <th className="text-left py-2">Date</th>
-                <th className="text-left py-2">Address</th>
-                <th className="text-left py-2">Type</th>
-                <th className="text-left py-2">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {recentPickups.map(pickup => (
-                <tr key={pickup.id} className="border-b border-gray-100 hover:bg-gray-50">
-                  <td className="py-2">{pickup.date}</td>
-                  <td className="py-2">{pickup.address}</td>
-                  <td className="py-2">
-                    <span className="px-2 py-1 bg-gray-100 rounded-full text-xs">{pickup.type}</span>
-                  </td>
-                  <td className="py-2">
-                    <span className={`px-2 py-1 rounded-full text-xs ${
-                      pickup.status === 'Completed' ? 'bg-emerald-100 text-emerald-700' :
-                      pickup.status === 'In Progress' ? 'bg-blue-100 text-blue-700' :
-                      'bg-yellow-100 text-yellow-700'
-                    }`}>
-                      {pickup.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Operations Panel */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6">
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 md:p-6 shadow-md">
-          <h3 className="text-lg font-semibold mb-3 flex items-center">
-            <TrendingUp className="w-4 h-4 mr-2" />
-            Trend Analysis
-          </h3>
-          <div className="h-64 md:h-72">
-            <Line data={lineData} options={options} />
-          </div>
-        </div>
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 md:p-6 shadow-md space-y-4">
-          <h3 className="text-lg font-semibold flex items-center">
-            <FileText className="w-4 h-4 mr-2" />
-            Operations Hub
-          </h3>
-          <button 
-            onClick={handleViewReport}
-            className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg hover:shadow-lg transition-all"
-          >
-            <FileText className="w-4 h-4" />
-            <span>Generate Report</span>
-          </button>
-          <button 
-            onClick={handleRouteOptimizer}
-            className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-indigo-500 to-blue-500 text-white py-3 rounded-lg hover:shadow-lg transition-all"
-          >
-            <Map className="w-4 h-4" />
-            <span>Route Optimizer</span>
-          </button>
-          <div className={routeData ? 'block' : 'hidden'}>
-            <p className="text-xs text-gray-600">Optimized: {routeData?.distance} | {routeData?.time} | Fuel: {routeData?.fuel}</p>
-          </div>
-          <button className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-gray-500 to-gray-600 text-white py-3 rounded-lg hover:shadow-lg transition-all">
-            <Settings className="w-4 h-4" />
-            <span>System Settings</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Modals */}
-      <Modal 
-        isOpen={showScheduleModal} 
-        onClose={handleCloseModal} 
-        title="Schedule New Pickup"
-        type="schedule"
-      />
-      <Modal 
-        isOpen={showReportModal} 
-        onClose={handleCloseModal} 
-        title="Performance Report"
-        type="report"
-      />
-
-      {/* Footer */}
-      <footer className="bg-white/80 backdrop-blur-sm rounded-xl p-4 md:p-6 shadow-md">
-        <div className="flex justify-between items-center text-sm text-gray-600">
-          <div>Live data sync active • {new Date().toLocaleDateString()}</div>
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center text-emerald-600">
-              <CheckCircle className="w-4 h-4 mr-1" />
-              <span>Secure & Updated</span>
-            </div>
-            <select 
-              onChange={(e) => {
-                if (e.target.value) alert(`${e.target.value.toUpperCase()} export initiated!`);
-                e.target.value = '';
-              }}
-              className="border border-gray-300 rounded-lg px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-            >
-              <option value="">Quick Export</option>
-              <option value="pdf">PDF Summary</option>
-              <option value="csv">CSV Data</option>
-              <option value="excel">Excel Analytics</option>
-            </select>
-          </div>
-        </div>
-      </footer>
+        );
+      })}
     </div>
   );
 };
-
+// Custom Pie Chart Component - Updated center text color
+const PieChart = ({ data }) => {
+  const total = data.reduce((sum, item) => sum + item.percentage, 0);
+  let cumulativeAngle = 0;
+ 
+  return (
+    <div style={{ position: 'relative', width: '200px', height: '200px', margin: '0 auto' }}>
+      <svg width="200" height="200" viewBox="0 0 200 200">
+        {data.map((item, index) => {
+          const angle = (item.percentage / total) * 360;
+          const startAngle = cumulativeAngle;
+          cumulativeAngle += angle;
+         
+          const startRad = (startAngle * Math.PI) / 180;
+          const endRad = ((startAngle + angle) * Math.PI) / 180;
+         
+          const x1 = 100 + 80 * Math.cos(startRad);
+          const y1 = 100 + 80 * Math.sin(startRad);
+          const x2 = 100 + 80 * Math.cos(endRad);
+          const y2 = 100 + 80 * Math.sin(endRad);
+         
+          const largeArc = angle > 180 ? 1 : 0;
+         
+          return (
+            <path
+              key={index}
+              d={`M 100 100 L ${x1} ${y1} A 80 80 0 ${largeArc} 1 ${x2} ${y2} Z`}
+              fill={item.color}
+              stroke="#ffffff"
+              strokeWidth="2"
+            />
+          );
+        })}
+        <circle cx="100" cy="100" r="40" fill="#ffffff" />
+      </svg>
+      <div style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        textAlign: 'center',
+        fontSize: '0.9rem',
+        fontWeight: '600',
+        color: '#10b981'
+      }}>
+        Waste
+        <br />
+        Composition
+      </div>
+    </div>
+  );
+};
+const Dashboard = () => {
+  const classes = useStyles();
+  const [data, setData] = useState(initialData);
+  const [timeFilter, setTimeFilter] = useState('weekly');
+  const [alertVisible, setAlertVisible] = useState(true);
+  const [selectedZone, setSelectedZone] = useState(null);
+  const [currentTime, setCurrentTime] = useState('7:00:00 PM');
+  const [alertMessage, setAlertMessage] = useState({
+    title: 'Predicted Overflow',
+    desc: 'Eastside zone projected to reach 90% capacity in 4 hours. Preemptive dispatch recommended.'
+  });
+  // Simulate real-time updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setData(prev => ({
+        ...prev,
+        stats: {
+          ...prev.stats,
+          totalWaste: prev.stats.totalWaste + Math.floor(Math.random() * 10),
+          recyclingRate: Math.min(95, prev.stats.recyclingRate + (Math.random() > 0.5 ? 0.1 : -0.1)),
+        }
+      }));
+    }, 5000);
+    // Dynamic alert updates - future-oriented
+    const alertInterval = setInterval(() => {
+      const futureAlerts = [
+        { title: 'Predicted Overflow', desc: 'Eastside zone projected to reach 90% capacity in 4 hours. Preemptive dispatch recommended.' },
+        { title: 'Efficiency Forecast', desc: 'Route optimization AI predicts 15% fuel savings next week based on current trends.' },
+        { title: 'Sustainability Milestone', desc: 'On track to divert 500 tons from landfill by end of Q4 2025.' },
+        { title: 'Maintenance Reminder', desc: 'North District sensors due for calibration in 48 hours to maintain accuracy.' },
+      ];
+      const randomAlert = futureAlerts[Math.floor(Math.random() * futureAlerts.length)];
+      setAlertMessage(randomAlert);
+    }, 30000); // Update every 30 seconds for dynamic feel
+    // Running time update
+    const timeInterval = setInterval(() => {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      });
+      setCurrentTime(timeString);
+    }, 1000);
+    return () => {
+      clearInterval(interval);
+      clearInterval(alertInterval);
+      clearInterval(timeInterval);
+    };
+  }, []);
+  const handleZoneClick = (zoneId) => {
+    setSelectedZone(zoneId);
+    // In a real app, this would navigate to zone details or show a modal
+    console.log(`Zone ${zoneId} selected`);
+  };
+  const handleAlertDismiss = () => {
+    setAlertVisible(false);
+  };
+  const handleTimeFilter = (filter) => {
+    setTimeFilter(filter);
+    // Make some difference: Switch chart data based on filter
+    let filteredChartData;
+    let updatedStats = { ...data.stats };
+    switch (filter) {
+      case 'daily':
+        filteredChartData = initialData.dailyData;
+        updatedStats = {
+          ...updatedStats,
+          totalWaste: 250,
+          recyclingRate: 72,
+          efficiency: 88,
+          activeVehicles: 12,
+        };
+        break;
+      case 'weekly':
+        filteredChartData = initialData.weeklyData;
+        updatedStats = {
+          ...updatedStats,
+          totalWaste: 12458,
+          recyclingRate: 68,
+          efficiency: 92,
+          activeVehicles: 47,
+        };
+        break;
+      case 'monthly':
+        filteredChartData = initialData.monthlyData;
+        updatedStats = {
+          ...updatedStats,
+          totalWaste: 21500,
+          recyclingRate: 70,
+          efficiency: 90,
+          activeVehicles: 45,
+        };
+        break;
+      case 'yearly':
+        filteredChartData = initialData.yearlyData;
+        updatedStats = {
+          ...updatedStats,
+          totalWaste: 86200,
+          recyclingRate: 65,
+          efficiency: 89,
+          activeVehicles: 50,
+        };
+        break;
+      default:
+        filteredChartData = initialData.weeklyData;
+    }
+    setData(prev => ({ 
+      ...prev, 
+      weeklyData: filteredChartData,
+      stats: updatedStats 
+    }));
+    // In a real app, this would fetch new data based on the filter
+    console.log(`Time filter changed to: ${filter}`);
+  };
+  const formatNumber = (num) => {
+    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
+    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
+    return num.toString();
+  };
+  const getFillLevelColor = (level) => {
+    if (level >= 80) return '#ef4444';
+    if (level >= 60) return '#f59e0b';
+    return '#10b981';
+  };
+  const getPriorityColor = (priority) => {
+    switch(priority) {
+      case 'High': return '#ef4444';
+      case 'Medium': return '#f59e0b';
+      case 'Low': return '#10b981';
+      default: return '#6b7280';
+    }
+  };
+  const chartData = data.weeklyData; // Use the updated data from filter
+  return (
+    <div className={classes.dashboard}>
+      {/* Top Bar */}
+      <div className={classes.topBar}>
+        <div className={classes.logoSection}>
+          <div className={classes.logoIcon}>♻️</div>
+        </div>
+        <div className={classes.dateSection}>
+          <span>🕐</span>
+          <span>{currentTime}</span>
+        </div>
+      </div>
+      <div className={classes.container}>
+        {/* Alert Banner */}
+        {alertVisible && (
+          <div className={classes.alertSection}>
+            <div style={{ fontSize: '1.5rem' }}>⚠️</div>
+            <div className={classes.alertContent}>
+              <h3>{alertMessage.title}</h3>
+              <p>{alertMessage.desc}</p>
+            </div>
+            <button className={classes.alertButton} onClick={handleAlertDismiss}>
+              Dismiss Alert
+            </button>
+          </div>
+        )}
+        {/* Time Filter */}
+        <div className={classes.timeFilter}>
+          <button
+            className={`${classes.filterButton} ${timeFilter === 'daily' ? 'active' : ''}`}
+            onClick={() => handleTimeFilter('daily')}
+          >
+            Daily
+          </button>
+          <button
+            className={`${classes.filterButton} ${timeFilter === 'weekly' ? 'active' : ''}`}
+            onClick={() => handleTimeFilter('weekly')}
+          >
+            Weekly
+          </button>
+          <button
+            className={`${classes.filterButton} ${timeFilter === 'monthly' ? 'active' : ''}`}
+            onClick={() => handleTimeFilter('monthly')}
+          >
+            Monthly
+          </button>
+          <button
+            className={`${classes.filterButton} ${timeFilter === 'yearly' ? 'active' : ''}`}
+            onClick={() => handleTimeFilter('yearly')}
+          >
+            Yearly
+          </button>
+        </div>
+        {/* Main Statistics Grid */}
+        <div className={classes.mainGrid}>
+          <div className={classes.statCard}>
+            <div className={classes.statHeader}>
+              <h3 className={classes.statTitle}>Total Waste Processed</h3>
+              <div className={classes.statIcon} style={{ backgroundColor: 'rgba(16, 185, 129, 0.2)', color: '#10b981' }}>
+                📊
+              </div>
+            </div>
+            <div className={classes.statValue}>{formatNumber(data.stats.totalWaste)} kg</div>
+            <div>
+              <span className={`${classes.statTrend} positive`}>↑ 12.5%</span>
+              <span style={{ marginLeft: '0.5rem', color: '#6b7280', fontSize: '0.9rem' }}>
+                from last month
+              </span>
+            </div>
+          </div>
+          <div className={classes.statCard}>
+            <div className={classes.statHeader}>
+              <h3 className={classes.statTitle}>Recycling Rate</h3>
+              <div className={classes.statIcon} style={{ backgroundColor: 'rgba(16, 185, 129, 0.2)', color: '#10b981' }}>
+                ♻️
+              </div>
+            </div>
+            <div className={classes.statValue}>{data.stats.recyclingRate.toFixed(1)}%</div>
+            <div>
+              <span className={`${classes.statTrend} positive`}>↑ 8.2%</span>
+              <span style={{ marginLeft: '0.5rem', color: '#6b7280', fontSize: '0.9rem' }}>
+                exceeds target
+              </span>
+            </div>
+          </div>
+          <div className={classes.statCard}>
+            <div className={classes.statHeader}>
+              <h3 className={classes.statTitle}>Collection Efficiency</h3>
+              <div className={classes.statIcon} style={{ backgroundColor: 'rgba(59, 130, 246, 0.2)', color: '#3b82f6' }}>
+                ⚡
+              </div>
+            </div>
+            <div className={classes.statValue}>{data.stats.efficiency}%</div>
+            <div>
+              <span className={`${classes.statTrend} positive`}>↑ 3.1%</span>
+              <span style={{ marginLeft: '0.5rem', color: '#6b7280', fontSize: '0.9rem' }}>
+                optimal performance
+              </span>
+            </div>
+          </div>
+          <div className={classes.statCard}>
+            <div className={classes.statHeader}>
+              <h3 className={classes.statTitle}>Active Vehicles</h3>
+              <div className={classes.statIcon} style={{ backgroundColor: 'rgba(59, 130, 246, 0.2)', color: '#3b82f6' }}>
+                🚛
+              </div>
+            </div>
+            <div className={classes.statValue}>{data.stats.activeVehicles}</div>
+            <div>
+              <span className={`${classes.statTrend} positive`}>↑ 5.3%</span>
+              <span style={{ marginLeft: '0.5rem', color: '#6b7280', fontSize: '0.9rem' }}>
+                on duty
+              </span>
+            </div>
+          </div>
+        </div>
+        {/* Charts Section */}
+        <div className={classes.chartSection}>
+          <div className={classes.chartCard}>
+            <h3 className={classes.chartTitle}>📈 {timeFilter.charAt(0).toUpperCase() + timeFilter.slice(1)} Waste Collection</h3>
+            <BarChart
+              data={chartData}
+              colors={{ organic: '#10b981', recyclable: '#3b82f6', hazardous: '#ef4444' }}
+            />
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginTop: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <div style={{ width: '12px', height: '12px', backgroundColor: '#10b981', borderRadius: '2px' }}></div>
+                <span style={{ fontSize: '0.85rem', color: '#374151' }}>Organic</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <div style={{ width: '12px', height: '12px', backgroundColor: '#3b82f6', borderRadius: '2px' }}></div>
+                <span style={{ fontSize: '0.85rem', color: '#374151' }}>Recyclable</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <div style={{ width: '12px', height: '12px', backgroundColor: '#ef4444', borderRadius: '2px' }}></div>
+                <span style={{ fontSize: '0.85rem', color: '#374151' }}>Hazardous</span>
+              </div>
+            </div>
+          </div>
+          <div className={classes.chartCard}>
+            <h3 className={classes.chartTitle}>🥧 Waste Composition</h3>
+            <PieChart data={data.wasteComposition} />
+            <div className={classes.pieLegend}>
+              {data.wasteComposition.map((item, index) => (
+                <div key={index} className={classes.legendItem} style={{ color: '#374151' }}>
+                  <div className={classes.legendColor} style={{ backgroundColor: item.color }}></div>
+                  <span>{item.type}: {item.percentage}%</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        {/* Collection Zones */}
+        <div className={classes.zonesSection}>
+          <h3 className={classes.chartTitle}>🗺️ Collection Zones Status</h3>
+          <div className={classes.tableContainer}>
+            <table className={classes.zonesTable}>
+              <thead className={classes.tableHeader}>
+                <tr>
+                  <th>Zone</th>
+                  <th>Status</th>
+                  <th>Fill Level</th>
+                  <th>Priority</th>
+                  <th>Next Collection</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.collectionZones.map((zone) => (
+                  <tr
+                    key={zone.id}
+                    className={classes.tableRow}
+                    onClick={() => handleZoneClick(zone.id)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <td style={{ fontWeight: 600 }}>{zone.zone}</td>
+                    <td>
+                      <span className={`${classes.statusBadge} ${zone.status}`}>
+                        {zone.status === 'active' && '🟢'}
+                        {zone.status === 'maintenance' && '🟡'}
+                        {zone.status === 'full' && '🔴'}
+                        {zone.status.charAt(0).toUpperCase() + zone.status.slice(1)}
+                      </span>
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <div className={classes.progressBar}>
+                          <div
+                            className={classes.progressFill}
+                            style={{
+                              width: `${zone.fillLevel}%`,
+                              backgroundColor: getFillLevelColor(zone.fillLevel)
+                            }}
+                          ></div>
+                        </div>
+                        <span style={{ fontWeight: 600 }}>{zone.fillLevel}%</span>
+                      </div>
+                    </td>
+                    <td>
+                      <span style={{
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '12px',
+                        fontSize: '0.85rem',
+                        fontWeight: 600,
+                        backgroundColor: `${getPriorityColor(zone.priority)}20`,
+                        color: getPriorityColor(zone.priority),
+                      }}>
+                        {zone.priority}
+                      </span>
+                    </td>
+                    <td>{zone.nextCollection}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {/* Sustainability Initiatives */}
+        <div className={classes.processSection}>
+          <h3 className={classes.chartTitle}>🌟 Sustainability Initiatives</h3>
+          <div className={classes.initiativesGrid}>
+            {data.initiatives.map((initiative) => (
+              <div key={initiative.id} className={classes.initiativeCard}>
+                <div className={classes.initiativeHeader}>
+                  <div className={classes.initiativeIcon}>{initiative.icon}</div>
+                  <h4 className={classes.initiativeTitle}>{initiative.title}</h4>
+                </div>
+                <p className={classes.initiativeDesc}>{initiative.description}</p>
+                <div className={classes.initiativeProgress}>
+                  <div
+                    className={classes.initiativeProgressFill}
+                    style={{
+                      width: `${initiative.progress}%`,
+                      backgroundColor: '#10b981'
+                    }}
+                  ></div>
+                </div>
+                <div className={classes.initiativeStats}>
+                  <span>Progress: {initiative.progress}%</span>
+                  <span style={{ fontWeight: 600, color: '#10b981' }}>{initiative.impact}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        {/* Environmental Impact */}
+        <div className={classes.processSection}>
+          <h3 className={classes.chartTitle}>🌍 Environmental Impact</h3>
+          <div className={classes.impactGrid}>
+            <div className={classes.impactCard}>
+              <div className={classes.impactIcon}>🌳</div>
+              <div className={classes.impactValue}>{formatNumber(data.environmentalImpact.treesSaved)}</div>
+              <div className={classes.impactLabel}>Trees Equivalent Saved</div>
+            </div>
+           
+            <div className={classes.impactCard}>
+              <div className={classes.impactIcon}>💧</div>
+              <div className={classes.impactValue}>{formatNumber(data.environmentalImpact.waterSaved)} L</div>
+              <div className={classes.impactLabel}>Water Conserved</div>
+            </div>
+           
+            <div className={classes.impactCard}>
+              <div className={classes.impactIcon}>⚡</div>
+              <div className={classes.impactValue}>{formatNumber(data.environmentalImpact.energySaved)} kWh</div>
+              <div className={classes.impactLabel}>Energy Generated</div>
+            </div>
+           
+            <div className={classes.impactCard}>
+              <div className={classes.impactIcon}>☁️</div>
+              <div className={classes.impactValue}>{formatNumber(data.environmentalImpact.emissionsPrevented)} tons</div>
+              <div className={classes.impactLabel}>CO₂ Prevented</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 export default Dashboard;
