@@ -2,9 +2,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook, faTwitter, faInstagram, faLinkedin } from "@fortawesome/free-brands-svg-icons";
-// <<<<<<< HEAD
-// =======
-// >>>>>>> ae7a678ae623fc9f51aaa468bae5fe2a8a7a1fe4
+
 
 
 const Footer = () => {
@@ -17,17 +15,16 @@ const Footer = () => {
         </div>
         
         <div className="footer-section">
-  <h3>Quick Links</h3>
-  <ul>
-    <li><Link to="/">Home</Link></li>
-     <li><Link to="/about">About Us</Link></li>
-    <li><Link to="/tracker">Waste Tracker</Link></li>
-    <li><Link to="/tips">Recycling Tips</Link></li>
-    <li><Link to="/education">Educational Resources</Link></li>
-  </ul>
-</div>
+          <h3>Quick Links</h3>
+          <ul>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/about">About Us</Link></li>
+            <li><Link to="/tracker">Waste Tracker</Link></li>
+            <li><Link to="/tips">Recycling Tips</Link></li>
+            <li><Link to="/education">Educational Resources</Link></li>
+          </ul>
+        </div>
 
-        
         <div className="footer-section">
           <h3>Contact Info</h3>
           <p>📧 info@ecowaste.com</p>
@@ -38,13 +35,10 @@ const Footer = () => {
         <div className="footer-section">
           <h3>Follow Us</h3>
           <div className="social-links">
-          
-
-<FontAwesomeIcon icon={faFacebook} /><a href="https://facebook.com"> Facebook</a><br/>
-
-<FontAwesomeIcon icon={faTwitter} /><a href="https://twitter.com"> Twitter</a><br/>
-<FontAwesomeIcon icon={faInstagram} /><a href="https://instagram.com"> Instagram</a><br/>
-<FontAwesomeIcon icon={faLinkedin} /><a href="https://linkedin.com"> LinkedIn</a>
+            <a href="https://facebook.com" className="hover:text-primary-color"><FontAwesomeIcon icon={faFacebook} /> Facebook</a><br/>
+            <a href="https://twitter.com" className="hover:text-primary-color"><FontAwesomeIcon icon={faTwitter} /> Twitter</a><br/>
+            <a href="https://instagram.com" className="hover:text-primary-color"><FontAwesomeIcon icon={faInstagram} /> Instagram</a><br/>
+            <a href="https://linkedin.com" className="hover:text-primary-color"><FontAwesomeIcon icon={faLinkedin} /> LinkedIn</a>
           </div>
         </div>
       </div> 
