@@ -30,6 +30,7 @@ const Footer = () => {
             <li><Link to="/tracker">Waste Tracker</Link></li>
             <li><Link to="/tips">Recycling Tips</Link></li>
             <li><Link to="/education">Educational Resources</Link></li>
+            <li><Link to="/contact">Contact</Link></li>
           </ul>
         </div>
         
@@ -41,6 +42,7 @@ const Footer = () => {
             <li><Link to="/tracker">Waste Tracker</Link></li>
             <li><Link to="/tips">Recycling Tips</Link></li>
             <li><Link to="/education">Educational Resources</Link></li>
+            
           </ul>
         </div> */}
 

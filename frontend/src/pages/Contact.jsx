@@ -66,6 +66,24 @@ const handleSubmit = async (e) => {
           color: #111827;
           margin-bottom: 0.75rem;
         }
+          /* Fix: Improve input + dropdown visibility */
+.form-input,
+.form-textarea,
+.form-input option {
+  color: #111827; /* Dark visible text */
+  background-color: #F9FAFB; /* Light background */
+}
+
+/* Dropdown menu styling */
+select.form-input {
+  background-color: #FFFFFF;
+}
+
+select.form-input option {
+  background-color: #FFFFFF;
+  color: #111827;
+}
+
 
         .contact-subtitle {
           color: #6B7280;

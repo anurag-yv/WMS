@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import ScrollToTop from "./ScrollToTop";
 import './App.css';
 
 // Components
@@ -52,8 +53,11 @@ const ProtectedRoute = ({ children }) => {
 
 function App() {
   return (
+      
     <AuthProvider>
+     
       <Router>
+        <ScrollToTop/>
         <div className="App">
           <Navbar />
           <main className="main-content">
