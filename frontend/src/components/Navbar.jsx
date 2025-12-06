@@ -146,7 +146,8 @@ const Navbar = () => {
       <nav className="navbar">
         <div className="nav-container">
           <Link to="/" className="logo" onClick={closeMenu}>
-            <span>🌱</span> EcoWaste
+            EcoWaste
+            <span class="material-symbols-outlined " style={{ fontSize: "35upx" }}>eco</span>
           </Link>
 
           <div className={`nav-main ${isMenuOpen ? "active" : ""}`}>
