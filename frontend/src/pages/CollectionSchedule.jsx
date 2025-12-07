@@ -8,7 +8,7 @@ const getCountdown = (targetDateStr) => {
   const diff = target - now;
 
   if (diff < 0) {
-    return { text: 'Overdue', color: '#ef4444' };
+    return { text: 'Overdue', color: '#dc2626' };
   }
 
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -24,16 +24,16 @@ const getCountdown = (targetDateStr) => {
     text = `${minutes}m`;
   }
 
-  return { text, color: '#10B981' }; // Changed from #3b82f6 to #10B981
+  return { text, color: '#059669' };
 };
 
 const getStatusColor = (status) => {
   switch (status) {
-    case 'completed': return '#10B981'; // Changed from #3b82f6
+    case 'completed': return '#059669';
     case 'scheduled':
-    case 'confirmed': return '#10B981'; // Changed from #3b82f6
-    case 'cancelled': return '#ef4444';
-    case 'pending': return '#f59e0b';
+    case 'confirmed': return '#059669';
+    case 'cancelled': return '#dc2626';
+    case 'pending': return '#d97706';
     default: return '#6b7280';
   }
 };
@@ -368,7 +368,7 @@ const CollectionSchedule = () => {
       <ToastMessage message={message} />
       <header className="page-header">
         <h1 className="page-title">Collection Schedule</h1>
-        <p className="page-subtitle">Manage your upcoming waste collections</p>
+        <p className="page-subtitle text-center" >Manage your upcoming waste collections</p>
       </header>
       <main className="main-content">
         <MetricsOverview stats={stats} user={user} />
@@ -555,7 +555,7 @@ const LocationCard = ({ point }) => (
           className="capacity-fill"
           style={{ 
             width: `${point.capacity}%`,
-            backgroundColor: point.capacity > 70 ? '#ef4444' : point.capacity > 50 ? '#f59e0b' : '#10B981' // Changed from #3b82f6
+            backgroundColor: point.capacity > 70 ? '#dc2626' : point.capacity > 50 ? '#d97706' : '#059669'
           }} 
         />
       </div>
@@ -678,27 +678,27 @@ const ReportIssueModal = ({
 const GlobalStyles = () => (
   <style jsx global>{`
     :root {
-      /* Main Colors - Light Green & Soft Blue Theme */
-      --color-primary: #22c55e;        /* Fresh green - primary actions */
-      --color-primary-light: #86efac;  /* Light green for highlights */
-      --color-primary-dark: #16a34a;   /* Darker green for hover states */
-      --color-secondary: #3b82f6;      /* Soft blue for secondary elements */
-      --color-secondary-light: #93c5fd; /* Light blue for backgrounds */
-      --color-secondary-dark: #2563eb;  /* Darker blue */
+      /* Main Colors - Emerald & Teal Theme */
+      --color-primary: #059669;        /* Emerald 600 - primary actions */
+      --color-primary-light: #34d399;  /* Emerald 400 - highlights */
+      --color-primary-dark: #047857;   /* Emerald 700 - hover states */
+      --color-secondary: #0d9488;      /* Teal 600 - secondary elements */
+      --color-secondary-light: #5eead4; /* Teal 300 - backgrounds */
+      --color-secondary-dark: #0f766e;  /* Teal 700 */
       
       /* Status Colors */
-      --color-success: #22c55e;        /* Green */
-      --color-warning: #f59e0b;        /* Amber */
-      --color-danger: #ef4444;         /* Red */
-      --color-neutral: #6b7280;        /* Gray */
+      --color-success: #059669;        /* Emerald 600 */
+      --color-warning: #d97706;        /* Amber 600 */
+      --color-danger: #dc2626;         /* Red 600 */
+      --color-neutral: #6b7280;        /* Gray 500 */
       
       /* UI Colors */
-      --color-text: #1f2937;           /* Dark gray for text */
-      --color-text-secondary: #4b5563; /* Medium gray */
-      --color-bg: #f9fafb;             /* Very light gray background */
-      --color-surface: #ffffff;        /* White surfaces */
-      --color-border: #e5e7eb;         /* Light gray borders */
-      --color-hover: #f3f4f6;          /* Very light gray for hover */
+      --color-text: #111827;           /* Gray 900 */
+      --color-text-secondary: #4b5563; /* Gray 600 */
+      --color-bg: #f8fafc;             /* Slate 50 */
+      --color-surface: #ffffff;        /* White */
+      --color-border: #e2e8f0;         /* Slate 200 */
+      --color-hover: #f1f5f9;          /* Slate 100 */
       
       /* Shadows */
       --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -723,40 +723,39 @@ const GlobalStyles = () => (
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0.5rem 1rem 1rem 1rem; /* Reduced top padding */
-      background: linear-gradient(135deg, var(--color-bg) 0%, #f0f9ff 100%);
+      padding: 0.5rem 1rem 1rem 1rem;
+      background: linear-gradient(135deg, #f0fdf4 0%, #f0fdfa 100%);
       min-height: 100vh;
     }
 
-    /* Page Header Styles - Removed card styling */
+    /* Page Header Styles */
     .page-header {
       text-align: left;
-      padding: 0.75rem 0 1.25rem 0; /* Reduced padding, closer to top */
+      padding: 0.75rem 0 1.25rem 0;
       background: transparent;
       border: none;
       box-shadow: none;
       border-radius: 0;
-      // margin-bottom: 0.5rem; /* Reduced margin */
     }
 
     .page-title {
-  margin: 0 0 0.25rem 0;
-  font-size: 4.25rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #13b07cff 0%, #13b07cff 50%, #13b07cff 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: -0.025em;
-}
+      margin: 0 0 0.25rem 0;
+      font-size: 4.25rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #13b07cff 0%, #13b07cff 50%, #13b07cff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.025em;
+    }
 
-   .page-subtitle {
-  margin: 0;
-  font-size: 1rem;
-  color: var(--color-text-secondary);
-  font-weight: 400;
-  text-align: center;           /* ← This centers the text */
-}
+    .page-subtitle {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--color-text-secondary);
+      font-weight: 400;
+    }
+
     .main-content {
       display: flex;
       flex-direction: column;
@@ -841,12 +840,12 @@ const GlobalStyles = () => (
       letter-spacing: -0.025em;
     }
 
-    /* First card - green theme */
+    /* First card - emerald theme */
     .metrics-grid .metric-card:nth-child(1) .metric-value {
       color: var(--color-primary);
     }
 
-    /* Second card - blue theme */
+    /* Second card - teal theme */
     .metrics-grid .metric-card:nth-child(2) .metric-value {
       color: var(--color-secondary);
     }
@@ -968,16 +967,16 @@ const GlobalStyles = () => (
     }
 
     /* Status-specific colors */
-    .status-indicator[style*="background-color: #22c55e"] {
+    .status-indicator[style*="background-color: #059669"] {
       background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark)) !important;
     }
 
-    .status-indicator[style*="background-color: #ef4444"] {
-      background: linear-gradient(135deg, #f87171, #ef4444) !important;
+    .status-indicator[style*="background-color: #dc2626"] {
+      background: linear-gradient(135deg, #f87171, #dc2626) !important;
     }
 
-    .status-indicator[style*="background-color: #f59e0b"] {
-      background: linear-gradient(135deg, #fbbf24, #f59e0b) !important;
+    .status-indicator[style*="background-color: #d97706"] {
+      background: linear-gradient(135deg, #fbbf24, #d97706) !important;
     }
 
     /* Card Body */
@@ -1001,7 +1000,7 @@ const GlobalStyles = () => (
       align-items: center;
       gap: 0.5rem;
       padding: 0.5rem 1rem;
-      background: linear-gradient(135deg, #e0f2fe, #dcfce7);
+      background: linear-gradient(135deg, #ecfdf5, #f0fdf9);
       border-radius: 20px;
       border: 1px solid var(--color-primary-light);
       width: fit-content;
@@ -1015,7 +1014,7 @@ const GlobalStyles = () => (
 
     .material-tag {
       padding: 0.375rem 0.75rem;
-      background: linear-gradient(135deg, var(--color-secondary-light), #dbeafe);
+      background: linear-gradient(135deg, var(--color-secondary-light), #ccfbf1);
       color: var(--color-secondary-dark);
       border: 1px solid var(--color-secondary-light);
       border-radius: 6px;
@@ -1067,15 +1066,15 @@ const GlobalStyles = () => (
     }
 
     .action-button.export {
-      background: linear-gradient(135deg, #10b981, #059669);
+      background: linear-gradient(135deg, #059669, #047857);
       color: white;
-      border: 1px solid #10b981;
+      border: 1px solid #059669;
     }
 
     .action-button.export:hover:not(:disabled) {
       transform: translateY(-1px);
       box-shadow: var(--shadow-md);
-      background: linear-gradient(135deg, #059669, #10b981);
+      background: linear-gradient(135deg, #047857, #059669);
     }
 
     /* Locations Section */
@@ -1178,9 +1177,9 @@ const GlobalStyles = () => (
     .material-tag.small {
       font-size: 0.6875rem;
       padding: 0.25rem 0.5rem;
-      background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0);
       color: var(--color-primary-dark);
-      border: 1px solid #bbf7d0;
+      border: 1px solid #a7f3d0;
     }
 
     /* Guidelines Section */
@@ -1295,7 +1294,7 @@ const GlobalStyles = () => (
     .search-input:focus, .filter-select:focus, .sort-select:focus {
       outline: none;
       border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
     }
 
     /* Toast */
@@ -1317,10 +1316,10 @@ const GlobalStyles = () => (
       background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
     }
     .toast-error { 
-      background: linear-gradient(135deg, #f87171, #ef4444);
+      background: linear-gradient(135deg, #f87171, #dc2626);
     }
     .toast-warning { 
-      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      background: linear-gradient(135deg, #fbbf24, #d97706);
     }
     .toast-info { 
       background: linear-gradient(135deg, var(--color-secondary), var(--color-secondary-dark));
@@ -1419,7 +1418,7 @@ const GlobalStyles = () => (
     .form-input:focus {
       outline: none;
       border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
     }
 
     .form-actions {
