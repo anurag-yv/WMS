@@ -39,6 +39,9 @@ const Footer = () => {
             <li>
               <Link to="/education">Educational Resources</Link>
             </li>
+            <li>
+              <Link to="/contact">Contact Us</Link>
+            </li>
           </ul>
         </div>
 
