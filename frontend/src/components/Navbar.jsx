@@ -163,7 +163,7 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <li><Link to="/tips" onClick={closeMenu} className={location.pathname === '/tips' ? 'active' : ''}>Recycling Tips</Link></li>
+                  {/* <li><Link to="/tips" onClick={closeMenu} className={location.pathname === '/tips' ? 'active' : ''}>Recycling Tips</Link></li> */}
                   <li><Link to="/education" onClick={closeMenu} className={location.pathname === '/education' ? 'active' : ''}>Learn</Link></li>
                   <li><Link to="/about" onClick={closeMenu} className={location.pathname === '/about' ? 'active' : ''}>About</Link></li>
                   <li><Link to="/contact" onClick={closeMenu} className={location.pathname === '/contact' ? 'active' : ''}>Contact</Link></li>

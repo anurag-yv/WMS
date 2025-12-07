@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createUseStyles } from 'react-jss';
+
 // Create styles with JSS - Updated to match Home's color scheme (primary green #10b981, secondary blue #3b82f6, etc.)
 const useStyles = createUseStyles({
   dashboard: {
@@ -495,7 +496,38 @@ const useStyles = createUseStyles({
   tableContainer: {
     overflowX: 'auto',
   },
+  // Enhanced Pie Chart Container
+  pieChartContainer: {
+    position: 'relative',
+    width: '220px',
+    height: '220px',
+    margin: '0 auto',
+  },
+  pieChartSvg: {
+    transform: 'rotate(-90deg)',
+  },
+  pieCenterText: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    textAlign: 'center',
+    fontSize: '0.9rem',
+    fontWeight: '600',
+    color: '#10b981',
+    backgroundColor: 'white',
+    width: '80px',
+    height: '80px',
+    borderRadius: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+    border: '2px solid #f3f4f6',
+  },
 });
+
 // Data for the dashboard - Updated wasteComposition colors to match theme
 const initialData = {
   stats: {
@@ -539,7 +571,7 @@ const initialData = {
     { type: 'Organic', percentage: 45, color: '#10b981' },
     { type: 'Recyclable', percentage: 30, color: '#3b82f6' },
     { type: 'Hazardous', percentage: 10, color: '#ef4444' },
-    { type: 'Other', percentage: 15, color: '#6b7280' },
+    { type: 'Other', percentage: 15, color: '#8b5cf6' },
   ],
   collectionZones: [
     { id: 1, zone: 'Downtown', status: 'active', fillLevel: 85, priority: 'High', nextCollection: 'Tomorrow 10:00 AM' },
@@ -581,6 +613,7 @@ const initialData = {
     emissionsPrevented: 12400,
   }
 };
+
 // Custom Bar Chart Component - Updated colors to match theme
 const BarChart = ({ data, colors }) => {
   const maxValue = Math.max(...data.map(item =>
@@ -629,14 +662,35 @@ const BarChart = ({ data, colors }) => {
     </div>
   );
 };
-// Custom Pie Chart Component - Updated center text color
-const PieChart = ({ data }) => {
+
+// Enhanced Custom Pie Chart Component with proper spacing
+const EnhancedPieChart = ({ data }) => {
   const total = data.reduce((sum, item) => sum + item.percentage, 0);
   let cumulativeAngle = 0;
- 
+  
+  // Create gradient effect for the chart
+  const createGradient = (id, color) => {
+    return (
+      <linearGradient id={id} x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor={color} stopOpacity="0.9" />
+        <stop offset="100%" stopColor={color} stopOpacity="0.7" />
+      </linearGradient>
+    );
+  };
+
   return (
-    <div style={{ position: 'relative', width: '200px', height: '200px', margin: '0 auto' }}>
-      <svg width="200" height="200" viewBox="0 0 200 200">
+    <div style={{ position: 'relative', width: '220px', height: '220px', margin: '0 auto' }}>
+      <svg width="220" height="220" viewBox="0 0 220 220" style={{ transform: 'rotate(-90deg)' }}>
+        <defs>
+          {createGradient('gradient-organic', '#10b981')}
+          {createGradient('gradient-recyclable', '#3b82f6')}
+          {createGradient('gradient-hazardous', '#ef4444')}
+          {createGradient('gradient-other', '#8b5cf6')}
+        </defs>
+        
+        {/* Outer circle with shadow */}
+        <circle cx="110" cy="110" r="98" fill="none" stroke="#f3f4f6" strokeWidth="1" />
+        
         {data.map((item, index) => {
           const angle = (item.percentage / total) * 360;
           const startAngle = cumulativeAngle;
@@ -645,25 +699,58 @@ const PieChart = ({ data }) => {
           const startRad = (startAngle * Math.PI) / 180;
           const endRad = ((startAngle + angle) * Math.PI) / 180;
          
-          const x1 = 100 + 80 * Math.cos(startRad);
-          const y1 = 100 + 80 * Math.sin(startRad);
-          const x2 = 100 + 80 * Math.cos(endRad);
-          const y2 = 100 + 80 * Math.sin(endRad);
-         
           const largeArc = angle > 180 ? 1 : 0;
-         
+          
+          // Outer arc (main pie slice)
+          const x1 = 110 + 98 * Math.cos(startRad);
+          const y1 = 110 + 98 * Math.sin(startRad);
+          const x2 = 110 + 98 * Math.cos(endRad);
+          const y2 = 110 + 98 * Math.sin(endRad);
+          
+          // Inner arc (for donut effect)
+          const innerRadius = 40;
+          const x3 = 110 + innerRadius * Math.cos(endRad);
+          const y3 = 110 + innerRadius * Math.sin(endRad);
+          const x4 = 110 + innerRadius * Math.cos(startRad);
+          const y4 = 110 + innerRadius * Math.sin(startRad);
+
+          const gradientId = `gradient-${item.type.toLowerCase()}`;
+          
           return (
-            <path
-              key={index}
-              d={`M 100 100 L ${x1} ${y1} A 80 80 0 ${largeArc} 1 ${x2} ${y2} Z`}
-              fill={item.color}
-              stroke="#ffffff"
-              strokeWidth="2"
-            />
+            <g key={index}>
+              <path
+                d={`M ${x1} ${y1} 
+                    A 98 98 0 ${largeArc} 1 ${x2} ${y2} 
+                    L ${x3} ${y3} 
+                    A ${innerRadius} ${innerRadius} 0 ${largeArc} 0 ${x4} ${y4} 
+                    Z`}
+                fill={`url(#${gradientId})`}
+                stroke="white"
+                strokeWidth="2"
+                style={{ transition: 'all 0.3s ease' }}
+              />
+              
+              {/* Percentage label */}
+              {angle > 10 && (
+                <text
+                  x={110 + 70 * Math.cos(startRad + angle / 2 * Math.PI / 180)}
+                  y={110 + 70 * Math.sin(startRad + angle / 2 * Math.PI / 180)}
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fill="white"
+                  fontSize="10"
+                  fontWeight="bold"
+                  style={{ transform: 'rotate(90deg)', transformOrigin: `${110 + 70 * Math.cos(startRad + angle / 2 * Math.PI / 180)}px ${110 + 70 * Math.sin(startRad + angle / 2 * Math.PI / 180)}px` }}
+                >
+                  {item.percentage}%
+                </text>
+              )}
+            </g>
           );
         })}
-        <circle cx="100" cy="100" r="40" fill="#ffffff" />
       </svg>
+      
+      {/* Center text */}
       <div style={{
         position: 'absolute',
         top: '50%',
@@ -672,15 +759,139 @@ const PieChart = ({ data }) => {
         textAlign: 'center',
         fontSize: '0.9rem',
         fontWeight: '600',
-        color: '#10b981'
+        color: '#10b981',
+        backgroundColor: 'white',
+        width: '80px',
+        height: '80px',
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+        border: '2px solid #f3f4f6',
       }}>
         Waste
         <br />
-        Composition
+        Split
       </div>
     </div>
   );
 };
+
+// Alternative Pie Chart with better spacing
+const ModernPieChart = ({ data }) => {
+  const total = data.reduce((sum, item) => sum + item.percentage, 0);
+  const radius = 90;
+  const centerX = 110;
+  const centerY = 110;
+  const gap = 2; // Gap between slices in degrees
+  
+  let cumulativeAngle = 0;
+  
+  const slices = data.map((item, index) => {
+    const angle = (item.percentage / total) * (360 - data.length * gap);
+    const startAngle = cumulativeAngle + (index * gap);
+    const endAngle = startAngle + angle;
+    cumulativeAngle += angle;
+    
+    const startRad = (startAngle * Math.PI) / 180;
+    const endRad = (endAngle * Math.PI) / 180;
+    
+    const x1 = centerX + radius * Math.cos(startRad);
+    const y1 = centerY + radius * Math.sin(startRad);
+    const x2 = centerX + radius * Math.cos(endRad);
+    const y2 = centerY + radius * Math.sin(endRad);
+    
+    const largeArc = angle > 180 ? 1 : 0;
+    
+    return {
+      path: `M ${centerX} ${centerY} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2} Z`,
+      color: item.color,
+      percentage: item.percentage,
+      type: item.type,
+      midAngle: startAngle + angle / 2,
+    };
+  });
+
+  return (
+    <div style={{ position: 'relative', width: '220px', height: '220px', margin: '0 auto' }}>
+      <svg width="220" height="220" viewBox="0 0 220 220">
+        <defs>
+          <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor="rgba(0,0,0,0.1)" />
+          </filter>
+        </defs>
+        
+        {/* Background circle */}
+        <circle cx="110" cy="110" r="95" fill="#f9fafb" stroke="#e5e7eb" strokeWidth="1" />
+        
+        {slices.map((slice, index) => (
+          <g key={index} filter="url(#shadow)">
+            <path
+              d={slice.path}
+              fill={slice.color}
+              stroke="white"
+              strokeWidth="2"
+              style={{ transition: 'transform 0.3s' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.05)';
+                e.currentTarget.style.transformOrigin = 'center';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            />
+            
+            {/* Percentage label */}
+            {slice.percentage > 8 && (
+              <text
+                x={110 + 50 * Math.cos((slice.midAngle * Math.PI) / 180)}
+                y={110 + 50 * Math.sin((slice.midAngle * Math.PI) / 180)}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill="white"
+                fontSize="11"
+                fontWeight="bold"
+                style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.3)' }}
+              >
+                {slice.percentage}%
+              </text>
+            )}
+          </g>
+        ))}
+        
+        {/* Center circle */}
+        <circle cx="110" cy="110" r="40" fill="white" stroke="#f3f4f6" strokeWidth="2" />
+      </svg>
+      
+      {/* Center text */}
+      <div style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        textAlign: 'center',
+        fontSize: '0.85rem',
+        fontWeight: '700',
+        color: '#10b981',
+        width: '70px',
+        height: '70px',
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        backgroundColor: 'white',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+      }}>
+        <div style={{ fontSize: '1rem', fontWeight: '800' }}>100%</div>
+        <div style={{ fontSize: '0.7rem', color: '#6b7280' }}>Total</div>
+      </div>
+    </div>
+  );
+};
+
 const Dashboard = () => {
   const classes = useStyles();
   const [data, setData] = useState(initialData);
@@ -692,6 +903,8 @@ const Dashboard = () => {
     title: 'Predicted Overflow',
     desc: 'Eastside zone projected to reach 90% capacity in 4 hours. Preemptive dispatch recommended.'
   });
+  const [pieChartType, setPieChartType] = useState('modern'); // 'modern' or 'enhanced'
+
   // Simulate real-time updates
   useEffect(() => {
     const interval = setInterval(() => {
@@ -704,6 +917,7 @@ const Dashboard = () => {
         }
       }));
     }, 5000);
+    
     // Dynamic alert updates - future-oriented
     const alertInterval = setInterval(() => {
       const futureAlerts = [
@@ -715,6 +929,7 @@ const Dashboard = () => {
       const randomAlert = futureAlerts[Math.floor(Math.random() * futureAlerts.length)];
       setAlertMessage(randomAlert);
     }, 30000); // Update every 30 seconds for dynamic feel
+    
     // Running time update
     const timeInterval = setInterval(() => {
       const now = new Date();
@@ -726,20 +941,24 @@ const Dashboard = () => {
       });
       setCurrentTime(timeString);
     }, 1000);
+    
     return () => {
       clearInterval(interval);
       clearInterval(alertInterval);
       clearInterval(timeInterval);
     };
   }, []);
+
   const handleZoneClick = (zoneId) => {
     setSelectedZone(zoneId);
     // In a real app, this would navigate to zone details or show a modal
     console.log(`Zone ${zoneId} selected`);
   };
+
   const handleAlertDismiss = () => {
     setAlertVisible(false);
   };
+
   const handleTimeFilter = (filter) => {
     setTimeFilter(filter);
     // Make some difference: Switch chart data based on filter
@@ -797,16 +1016,19 @@ const Dashboard = () => {
     // In a real app, this would fetch new data based on the filter
     console.log(`Time filter changed to: ${filter}`);
   };
+
   const formatNumber = (num) => {
     if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
     if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
     return num.toString();
   };
+
   const getFillLevelColor = (level) => {
     if (level >= 80) return '#ef4444';
     if (level >= 60) return '#f59e0b';
     return '#10b981';
   };
+
   const getPriorityColor = (priority) => {
     switch(priority) {
       case 'High': return '#ef4444';
@@ -815,19 +1037,26 @@ const Dashboard = () => {
       default: return '#6b7280';
     }
   };
+
   const chartData = data.weeklyData; // Use the updated data from filter
+
   return (
     <div className={classes.dashboard}>
       {/* Top Bar */}
       <div className={classes.topBar}>
         <div className={classes.logoSection}>
           <div className={classes.logoIcon}>♻️</div>
+          <div>
+            <h1 style={{ margin: 0, fontSize: '1.5rem', color: '#10b981' }}>Eco Impact Overview</h1>
+            
+          </div>
         </div>
         <div className={classes.dateSection}>
           <span>🕐</span>
           <span>{currentTime}</span>
         </div>
       </div>
+
       <div className={classes.container}>
         {/* Alert Banner */}
         {alertVisible && (
@@ -842,6 +1071,7 @@ const Dashboard = () => {
             </button>
           </div>
         )}
+
         {/* Time Filter */}
         <div className={classes.timeFilter}>
           <button
@@ -869,6 +1099,7 @@ const Dashboard = () => {
             Yearly
           </button>
         </div>
+
         {/* Main Statistics Grid */}
         <div className={classes.mainGrid}>
           <div className={classes.statCard}>
@@ -886,6 +1117,7 @@ const Dashboard = () => {
               </span>
             </div>
           </div>
+
           <div className={classes.statCard}>
             <div className={classes.statHeader}>
               <h3 className={classes.statTitle}>Recycling Rate</h3>
@@ -901,6 +1133,7 @@ const Dashboard = () => {
               </span>
             </div>
           </div>
+
           <div className={classes.statCard}>
             <div className={classes.statHeader}>
               <h3 className={classes.statTitle}>Collection Efficiency</h3>
@@ -916,6 +1149,7 @@ const Dashboard = () => {
               </span>
             </div>
           </div>
+
           <div className={classes.statCard}>
             <div className={classes.statHeader}>
               <h3 className={classes.statTitle}>Active Vehicles</h3>
@@ -932,6 +1166,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+
         {/* Charts Section */}
         <div className={classes.chartSection}>
           <div className={classes.chartCard}>
@@ -955,9 +1190,34 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
+
           <div className={classes.chartCard}>
-            <h3 className={classes.chartTitle}>🥧 Waste Composition</h3>
-            <PieChart data={data.wasteComposition} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h3 className={classes.chartTitle}>🥧 Waste Composition</h3>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <button
+                  className={`${classes.filterButton} ${pieChartType === 'modern' ? 'active' : ''}`}
+                  onClick={() => setPieChartType('modern')}
+                  style={{ padding: '0.3rem 0.7rem', fontSize: '0.8rem' }}
+                >
+                  Modern
+                </button>
+                <button
+                  className={`${classes.filterButton} ${pieChartType === 'enhanced' ? 'active' : ''}`}
+                  onClick={() => setPieChartType('enhanced')}
+                  style={{ padding: '0.3rem 0.7rem', fontSize: '0.8rem' }}
+                >
+                  Enhanced
+                </button>
+              </div>
+            </div>
+            
+            {pieChartType === 'modern' ? (
+              <ModernPieChart data={data.wasteComposition} />
+            ) : (
+              <EnhancedPieChart data={data.wasteComposition} />
+            )}
+            
             <div className={classes.pieLegend}>
               {data.wasteComposition.map((item, index) => (
                 <div key={index} className={classes.legendItem} style={{ color: '#374151' }}>
@@ -968,6 +1228,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+
         {/* Collection Zones */}
         <div className={classes.zonesSection}>
           <h3 className={classes.chartTitle}>🗺️ Collection Zones Status</h3>
@@ -1032,6 +1293,7 @@ const Dashboard = () => {
             </table>
           </div>
         </div>
+
         {/* Sustainability Initiatives */}
         <div className={classes.processSection}>
           <h3 className={classes.chartTitle}>🌟 Sustainability Initiatives</h3>
@@ -1060,6 +1322,7 @@ const Dashboard = () => {
             ))}
           </div>
         </div>
+
         {/* Environmental Impact */}
         <div className={classes.processSection}>
           <h3 className={classes.chartTitle}>🌍 Environmental Impact</h3>
@@ -1093,4 +1356,5 @@ const Dashboard = () => {
     </div>
   );
 };
+
 export default Dashboard;

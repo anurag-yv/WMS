@@ -293,7 +293,7 @@ const RecyclingTips = () => {
       <style>{`
         :root {
           --primary-color: #10B981;
-          --primary-dark: #059669;
+          --primary-dark: #10B981;
           --secondary-color: #3b82f6;
           --accent-color: #ef4444;
           --text-dark: #1e293b;
