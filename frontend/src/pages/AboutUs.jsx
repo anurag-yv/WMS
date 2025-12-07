@@ -1,117 +1,32 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 const AboutUs = () => {
-  /* ------------------ ILLUSTRATOR SVG ICONS ------------------ */
-
+  /* ------------------ SVG ICONS (for values & story) ------------------ */
   const SVG = {
-    developer: (
-      <svg width="70" height="70" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="30" fill="#e8f9f0" stroke="#27ae60" strokeWidth="3" />
-        <circle cx="32" cy="24" r="10" fill="#27ae60" />
-        <rect x="18" y="36" width="28" height="16" rx="6" fill="#27ae60" />
-      </svg>
-    ),
-    designer: (
-      <svg width="70" height="70" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="30" fill="#eaf0ff" stroke="#667eea" strokeWidth="3" />
-        <path d="M20 42 L44 22" stroke="#667eea" strokeWidth="4" />
-        <circle cx="20" cy="42" r="6" fill="#667eea" />
-        <circle cx="44" cy="22" r="6" fill="#667eea" />
-      </svg>
-    ),
-    backend: (
-      <svg width="70" height="70" viewBox="0 0 64 64">
-        <rect x="8" y="12" width="48" height="40" rx="6" fill="#e8f9f0" stroke="#27ae60" strokeWidth="3" />
-        <rect x="16" y="20" width="32" height="10" fill="#27ae60" />
-        <rect x="16" y="34" width="20" height="6" fill="#27ae60" />
-      </svg>
-    ),
-
     sustainability: (
-      <svg width="60" height="60" viewBox="0 0 64 64">
+      <svg width="70" height="70" viewBox="0 0 64 64">
         <path d="M32 50 C10 40 14 16 32 12 C50 16 54 40 32 50Z" fill="#27ae60" />
         <rect x="28" y="50" width="8" height="12" fill="#145a32" />
       </svg>
     ),
-
     community: (
-      <svg width="60" height="60" viewBox="0 0 64 64">
+      <svg width="70" height="70" viewBox="0 0 64 64">
         <circle cx="20" cy="24" r="10" fill="#27ae60" />
         <circle cx="44" cy="24" r="10" fill="#27ae60" />
         <rect x="14" y="34" width="36" height="16" rx="8" fill="#145a32" />
       </svg>
     ),
-
     innovation: (
-      <svg width="60" height="60" viewBox="0 0 64 64">
+      <svg width="70" height="70" viewBox="0 0 64 64">
         <circle cx="32" cy="24" r="12" fill="#27ae60" />
         <rect x="26" y="36" width="12" height="14" fill="#145a32" />
       </svg>
     ),
-
-    access: (
-      <svg width="60" height="60" viewBox="0 0 64 64">
-        <rect x="14" y="24" width="36" height="26" rx="4" fill="#27ae60" />
-        <circle cx="26" cy="37" r="5" fill="white" />
-      </svg>
-    ),
-
-    transparency: (
-      <svg width="60" height="60" viewBox="0 0 64 64">
-        <rect x="10" y="18" width="44" height="28" stroke="#27ae60" strokeWidth="3" fill="none" />
-        <rect x="18" y="28" width="10" height="12" fill="#27ae60" />
-        <rect x="32" y="32" width="10" height="8" fill="#27ae60" />
-      </svg>
-    ),
-
-    global: (
-      <svg width="60" height="60" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="26" stroke="#27ae60" strokeWidth="3" fill="#e8f9f0" />
-        <path d="M20 32 H44 M32 20 V44" stroke="#27ae60" strokeWidth="3" />
-      </svg>
-    ),
-
     recycling: (
-      <svg width="70" height="70" viewBox="0 0 64 64">
+      <svg width="120" height="120" viewBox="0 0 64 64">
         <path d="M22 14 L10 32 L22 32 Z" fill="#27ae60" />
         <path d="M42 14 L54 32 L42 32 Z" fill="#27ae60" />
         <path d="M16 40 L32 52 L48 40 L32 28 Z" fill="#145a32" />
-      </svg>
-    ),
-
-    react: (
-      <svg width="60" height="60" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="6" fill="#27ae60" />
-        <ellipse cx="32" cy="32" rx="22" ry="10" stroke="#27ae60" strokeWidth="3" fill="none" />
-        <ellipse cx="32" cy="32" rx="22" ry="10" stroke="#27ae60" strokeWidth="3" fill="none" transform="rotate(60 32 32)" />
-        <ellipse cx="32" cy="32" rx="22" ry="10" stroke="#27ae60" strokeWidth="3" fill="none" transform="rotate(120 32 32)" />
-      </svg>
-    ),
-
-    node: (
-      <svg width="60" height="60" viewBox="0 0 64 64">
-        <polygon points="32,6 54,18 54,46 32,58 10,46 10,18" fill="#27ae60" />
-      </svg>
-    ),
-
-    mongodb: (
-      <svg width="60" height="60" viewBox="0 0 64 64">
-        <path d="M32 6 C46 20 46 40 32 58 C18 40 18 20 32 6Z" fill="#27ae60" />
-      </svg>
-    ),
-
-    chart: (
-      <svg width="60" height="60" viewBox="0 0 64 64">
-        <rect x="12" y="32" width="8" height="20" fill="#27ae60" />
-        <rect x="28" y="24" width="8" height="28" fill="#27ae60" />
-        <rect x="44" y="16" width="8" height="36" fill="#27ae60" />
-      </svg>
-    ),
-
-    express: (
-      <svg width="60" height="60" viewBox="0 0 64 64">
-        <line x1="10" y1="32" x2="54" y2="32" stroke="#27ae60" strokeWidth="6" />
       </svg>
     ),
   };
@@ -119,204 +34,225 @@ const AboutUs = () => {
   const developers = [
     {
       id: 1,
-      name: "Anurag ",
+      name: "Anurag Yadav",
       role: "Full Stack Developer",
-      image: SVG.developer,
-      bio: "Passionate about sustainable technology.",
-      skills: ["React", "Node.js", "MongoDB"],
-      github: "https://github.com/alex-morgan",
-      linkedin: "https://linkedin.com/in/alex-morgan",
+      image: (
+        <img
+          src="https://media.licdn.com/dms/image/v2/D5603AQGWtL4PhVweNw/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1727811759758?e=1766620800&v=beta&t=nJ-R1o1fr8g6C3VaHF9mrrYBBiPfdFdGfJSMXKNoLu4"
+          alt="Anurag Yadav"
+          style={{ width: "80px", height: "80px", borderRadius: "50%", objectFit: "cover" }}
+        />
+      ),
+      bio: "Passionate about building sustainable technology solutions that make a difference.",
+      skills: ["React", "Node.js", "MongoDB", "Express"],
+      github: "https://github.com/anurag-yv",
+      linkedin: "https://www.linkedin.com/in/anurag-yv/",
     },
     {
       id: 2,
       name: "Gomit Saha",
-      role: "Full Stack Developer",
-      image: SVG.designer,
-      bio: "Focused on intuitive and beautiful interfaces.",
-      skills: ["React", "Figma", "CSS3"],
-      github: "https://github.com/sarah-chen",
-      linkedin: "https://linkedin.com/in/sarah-chen",
+      role: "UI/UX Designer",
+      image: (
+        <img
+          src="https://avatars.githubusercontent.com/u/203422227?v=4"
+          alt="Gomit Saha"
+          style={{ width: "80px", height: "80px", borderRadius: "50%", objectFit: "cover" }}
+        />
+      ),
+      bio: "Creates intuitive and beautiful interfaces that enhance user experience.",
+      skills: ["Figma", "React", "Tailwind", "UI/UX"],
+      github: "https://github.com/Gomit-Dev",
+      linkedin: "https://www.linkedin.com/in/gomit-saha/",
     },
     {
       id: 3,
       name: "Pranav Giara",
-      role: "Full Stack Developer",
-      image: SVG.backend,
-      bio: "Specializes in scalable server architecture.",
-      skills: ["Node.js", "Express", "MongoDB"],
-      github: "https://github.com/david-okoro",
-      linkedin: "https://linkedin.com/in/david-okoro",
+      role: "Frontend Developer",
+      image: (
+        <img
+          src="https://media.licdn.com/dms/image/v2/D5603AQH83B80tL76dA/profile-displayphoto-crop_800_800/B56ZqCQBIxI8AM-/0/1763121830771?e=1766620800&v=beta&t=a8FB31ZBVApnN4IS_sDqPDwYgnwovDweNu2649JXieo"
+          alt="Pranav Giara"
+          style={{ width: "80px", height: "80px", borderRadius: "50%", objectFit: "cover" }}
+        />
+      ),
+      bio: "Specializes in scalable server architecture and efficient data management.",
+      skills: ["React", "Node.js", "MongoDB", "CSS3"],
+      github: "https://github.com/pranav045",
+      linkedin: "https://www.linkedin.com/in/pranav-gaira/",
     },
   ];
 
   const values = [
-    { icon: SVG.sustainability, title: "Sustainability First", description: "Built for minimal environmental impact" },
-    { icon: SVG.community, title: "Community Driven", description: "Built for the eco-conscious community" },
-    { icon: SVG.innovation, title: "Innovation", description: "Technology solving real environmental issues" },
-    { icon: SVG.access, title: "Accessibility", description: "Making sustainable living easy" },
-    { icon: SVG.transparency, title: "Transparency", description: "Clear impact tracking" },
-    { icon: SVG.global, title: "Global Impact", description: "Act locally, think globally" },
+    { icon: SVG.sustainability, title: "Sustainability First", description: "Every feature is designed with minimal environmental impact in mind" },
+    { icon: SVG.community, title: "Community Driven", description: "Built by and for the eco-conscious community worldwide" },
+    { icon: SVG.innovation, title: "Innovation", description: "Leveraging technology to solve real environmental challenges" },
+  ];
+
+  const techStack = [
+    { name: "React", logo: "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" },
+    { name: "Node.js", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" },
+    { name: "MongoDB", logo: "https://webimages.mongodb.com/_com_assets/cms/mongodb_logo1-76twgcu2dm.png" },
+    { name: "Express", logo: "https://upload.wikimedia.org/wikipedia/commons/6/64/Expressjs.png" },
+    { name: "Chart.js", logo: "https://www.chartjs.org/media/logo-title.svg" },
   ];
 
   return (
-    <div style={{ padding: "2rem", maxWidth: "1200px", margin: "0 auto" }}>
-      <style>{`
-        .journey-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 3rem;
-          align-items: center;
-        }
-        @media(max-width:768px){
-          .journey-grid { grid-template-columns:1fr; }
-        }
-        .team-grid {
-          display:flex;
-          justify-content:center;
-          flex-wrap:wrap;
-          gap:2rem;
-        }
-        .team-card{
-          width:300px;
-          text-align:center;
-        }
-        .skill-tag{
-          padding:0.3rem 0.8rem;
-          background:#e8f9f0;
-          border-radius:20px;
-          margin:2px;
-          font-size:0.8rem;
-        }
+    <div className="about-page">
+      <style jsx>{`
+        /* All your beautiful styles */
+        .about-page { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+        .hero-section { text-align: center; padding: 4rem 1rem; background: linear-gradient(135deg, #f0f9f4 0%, #e6f7ed 100%); border-radius: 20px; margin: 2rem 0 4rem; position: relative; overflow: hidden; }
+        .hero-section::before { content: ''; position: absolute; top: -50%; right: -10%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(39,174,96,0.1) 0%, transparent 70%); }
+        .hero-title { font-size: 3.5rem; color: #145a32; margin-bottom: 1rem; font-weight: 700; }
+        .hero-subtitle { font-size: 1.25rem; color: #666; max-width: 600px; margin: 0 auto 2rem; line-height: 1.6; }
+        .section-title { text-align: center; font-size: 2.5rem; color: #145a32; margin-bottom: 3rem; font-weight: 600; }
+        .story-section { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; margin-bottom: 6rem; padding: 2rem; }
+        @media (max-width: 768px) { .story-section { grid-template-columns: 1fr; } }
+        .mission-card { background: white; padding: 3rem; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); position: relative; }
+        .mission-card::before { content: ''; position: absolute; top: 0; left: 0; width: 5px; height: 100%; background: linear-gradient(to bottom, #27ae60, #145a32); border-radius: 5px 0 0 5px; }
+        .mission-statement { font-size: 1.5rem; color: #145a32; font-style: italic; margin: 2rem 0; padding: 1.5rem; background: #f8fdf9; border-left: 4px solid #27ae60; border-radius: 8px; }
+        .values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 3rem 0; }
+        .value-card { text-align: center; padding: 2rem; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: all 0.3s; }
+        .value-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); background: linear-gradient(135deg, #f0f9f4 0%, #e6f7ed 100%); }
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 3rem 0; }
+        .team-card { background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center; padding: 2rem; transition: transform 0.3s; }
+        .team-card:hover { transform: translateY(-10px); }
+        .team-image { margin-bottom: 1.51rem; }
+        .team-name { font-size: 1.5rem; color: #145a32; margin: 0.5rem 0; font-weight: 600; }
+        .team-role { color: #27ae60; margin-bottom: 1rem; font-weight: 500; }
+        .team-bio { color: #666; line-height: 1.51; margin-bottom: 1.5rem; }
+        .skills-container { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 1rem; }
+        .skill-tag { padding: 0.4rem 1rem; background: #e8f9f0; color: #27ae60; border-radius: 20px; font-size: 0.85rem; }
+        .social-links a img { transition: transform 0.3s; }
+        .social-links a:hover img { transform: scale(1.2); }
+        .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 2rem; justify-items: center; }
+        .tech-card { text-align: center; padding: 1.5rem; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: all 0.3s; width: 120px; }
+        .tech-card:hover { transform: scale(1.1); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .tech-logo { width: 60px; height: 60px; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; }
+        .tech-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        @media (max-width: 768px) { .hero-title { font-size: 2.5rem; } .section-title { font-size: 2rem; } }
+        @media (max-width: 480px) { .hero-title { font-size: 2rem; } .team-grid, .values-grid { grid-template-columns: 1fr; } }
       `}</style>
 
-      {/* PAGE TITLE */}
-      <section style={{ textAlign: "center", marginBottom: "4rem" }}>
-        <h1 style={{ fontSize: "3.5rem", color: "var(--primary-color)" }}>About EcoWaste</h1>
+      {/* HERO */}
+      <section className="hero-section">
+        <h1 className="hero-title">About EcoWaste</h1>
+        <p className="hero-subtitle">
+          We're transforming waste management through technology, making sustainability 
+          accessible, engaging, and rewarding for everyone.
+        </p>
       </section>
 
-      {/* OUR STORY */}
-      <section className="card" style={{ marginBottom: "3rem" }}>
-        <div className="journey-grid">
-          <div style={{ textAlign: "center" }}>{SVG.recycling}</div>
-          <div>
-            <h2>Our Story</h2>
-            <p style={{ color: "var(--text-light)", textAlign: "left" }}>
-              We wanted to change that. Not with lectures… but with technology that makes sustainability easy,
-              understandable, and rewarding. What started as a passion project between a few environmentally-driven
-              developers has now evolved into a platform helping thousands reduce waste, track impact, and build
-              eco-friendly habits.
-            </p>
-            <strong style={{ color: "var(--text-light)", textAlign: "left" }}>
-              Our mission is simple: 
-            </strong>
-            <p style={{ color: "var(--text-light)", textAlign: "left" }}>
-              "Turn waste management into something people actually want to participate in."
-              Through powerful analytics, gamification, and intuitive UI, EcoWaste empowers users to make small
-              choices that create big change.
-            </p>
+      {/* STORY */}
+      <section className="story-section">
+        <div style={{ textAlign: "center" }}>{SVG.recycling}</div>
+        <div className="mission-card">
+          <h2 style={{ color: "#145a32", marginBottom: "1.5rem", fontSize: "2rem" }}>Our Journey</h2>
+          <p style={{ color: "#666", lineHeight: "1.6", marginBottom: "1.5rem" }}>
+            Frustrated by the complexity of sustainable living, our team set out to create a solution that makes environmental responsibility simple and rewarding...
+          </p>
+          <div className="mission-statement">
+            "Turn waste management into something people actually want to participate in."
           </div>
+          <p style={{ color: "#666", lineHeight: "1.6" }}>
+            Through intuitive design, powerful analytics, and community engagement, EcoWaste empowers individuals and businesses to make sustainable choices.
+          </p>
         </div>
       </section>
 
       {/* VALUES */}
-      <section style={{ marginBottom: "4rem" }}>
-        <h2 style={{ textAlign: "center" }}>Our Core Values</h2>
-        <div className="team-grid">
+      <section>
+        <h2 className="section-title">Our Core Values</h2>
+        <div className="values-grid">
           {values.map((v, i) => (
-            <div key={i} className="card" style={{ width: "250px", textAlign: "center" }}>
-              <div>{v.icon}</div>
-              <h3>{v.title}</h3>
-              <p style={{ color: "var(--text-light)" }}>{v.description}</p>
+            <div key={i} className="value-card">
+              <div className="value-icon">{v.icon}</div>
+              <h3 className="value-title">{v.title}</h3>
+              <p className="value-description">{v.description}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* TEAM */}
-      <section style={{ marginBottom: "4rem" }}>
-        <h2 style={{ textAlign: "center" }}>Meet the Team</h2>
-        <div className="team-grid">
-          {developers.map((dev) => (
-            <div key={dev.id} className="card team-card">
-              <div>{dev.image}</div>
-              <h3>{dev.name}</h3>
-              <p style={{ color: "var(--primary-color)" }}>{dev.role}</p>
-              <p style={{ color: "var(--text-light)" }}>{dev.bio}</p>
-              <div>
-                {dev.skills.map((s, i) => (
-                  <span className="skill-tag" key={i}>{s}</span>
-                ))}
+{/* MEET THE TEAM — REAL PREMIUM ICONS (NO SVG) */}
+{/* TEAM — CLEAN & PERFECT */}
+<section>
+  <h2 className="section-title">Meet Our Team</h2>
+  <div className="team-grid">
+    {developers.map((dev) => (
+      <div key={dev.id} className="team-card">
+        {/* IMAGE + SOCIAL ICONS BELOW IT */}
+        <div style={{ textAlign: "center", marginBottom: "1rem" }}>
+          <div className="team-image">{dev.image}</div>
+
+          {/* SMALLER ICONS RIGHT BELOW PHOTO */}
+         {/* SMALLER BUT SHARPER ICONS RIGHT BELOW PHOTO */}
+<div style={{ marginTop: "6px", display: "flex", gap: "12px", justifyContent: "center" }}>
+  <a href={dev.github} target="_blank" rel="noopener noreferrer">
+    <img
+      src="https://img.icons8.com/ios-filled/64/github.png"
+      alt="GitHub"
+      style={{
+        width: "21px",
+        height: "21px",
+        transition: "all 0.25s ease",
+        filter: "drop-shadow(0 0 1px rgba(0,0,0,0.2))",
+        marginTop:"-11px"
+      }}
+      onMouseEnter={(e) => e.currentTarget.style.transform = "translateY(-3px) scale(1.05)"}
+      onMouseLeave={(e) => e.currentTarget.style.transform = "translateY(0) scale(1)"}
+    />
+  </a>
+
+  <a href={dev.linkedin} target="_blank" rel="noopener noreferrer">
+    <img
+      src="https://img.icons8.com/color/64/linkedin.png"
+      alt="LinkedIn"
+      style={{
+        width: "21px",
+        height: "21px",
+        transition: "all 0.25s ease",
+        filter: "drop-shadow(0 0 1px rgba(0,0,0,0.2))",
+        marginTop:"-11px"
+      }}
+      onMouseEnter={(e) => e.currentTarget.style.transform = "translateY(-3px) scale(1.05)"}
+      onMouseLeave={(e) => e.currentTarget.style.transform = "translateY(0) scale(1)"}
+    />
+  </a>
+</div>
+
+        </div>
+
+        <h3 className="team-name">{dev.name}</h3>
+        <p className="team-role">{dev.role}</p>
+        <p className="team-bio">{dev.bio}</p>
+
+        <div className="skills-container">
+          {dev.skills.map((s, i) => (
+            <span key={i} className="skill-tag">{s}</span>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+            
+
+      {/* TECH STACK */}
+      <section style={{ marginBottom: 20 }}>
+        <h2 className="section-title">Technology Stack</h2>
+        <div className="tech-grid">
+          {techStack.map((tech, i) => (
+            <div key={i} className="tech-card">
+              <div className="tech-logo">
+                <img src={tech.logo} alt={tech.name} />
               </div>
+              <p style={{ color: "#145a32", fontWeight: "600" }}>{tech.name}</p>
             </div>
           ))}
         </div>
       </section>
-
-      {/* TECH STACK */}
-      <section style={{ marginBottom: "4rem" }}>
-      <h2 style={{ textAlign: "center" }}>Technology We Use</h2>
-
-      <div className="team-grid">
-
-        {/* React */}
-        <div className="card">
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg"
-            width="60"
-            height="60"
-            alt="React"
-          />
-          <p>React</p>
-        </div>
-
-        {/* Node.js */}
-        <div className="card">
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg"
-            width="60"
-            height="60"
-            alt="Node.js"
-          />
-          <p>Node.js</p>
-        </div>
-
-        {/* MongoDB (WORKING official CDN) */}
-        <div className="card">
-          <img
-            src="https://webimages.mongodb.com/_com_assets/cms/mongodb_logo1-76twgcu2dm.png"
-            width="60"
-            height="60"
-            alt="MongoDB"
-            style={{ objectFit: "contain" }}
-          />
-          <p>MongoDB</p>
-        </div>
-
-        {/* Chart.js */}
-        <div className="card">
-          <img
-            src="https://www.chartjs.org/media/logo-title.svg"
-            width="60"
-            height="60"
-            alt="Chart.js"
-          />
-          <p>Chart.js</p>
-        </div>
-
-        {/* Express */}
-        <div className="card">
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/6/64/Expressjs.png"
-            width="60"
-            height="60"
-            alt="Express"
-            style={{ objectFit: "contain" }}
-          />
-          <p>Express</p>
-        </div>
-
-      </div>
-    </section>
     </div>
   );
 };
