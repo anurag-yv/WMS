@@ -1,32 +1,32 @@
-// server.js (UPDATED - Add waste routes)
+
+
+
+
+
+
+
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const contactRoutes = require('./routes/contact');
-require("./config/transporter");
+
 
 
 const app = express();
 
 // Middleware
-app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://wmsd-one.vercel.app"
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
-}));
-
-// app.options('*', cors()); // keep this
-
-
-
-
-
-
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://wmsd-one.vercel.app" // Vercel Frontend
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
+  })
+);
 app.use(express.json());
 
 // Routes
@@ -101,11 +101,9 @@ app.listen(PORT, () => {
   console.log(`🔍 Test endpoint: http://localhost:${PORT}/api/test`);
   console.log(`❤️ Health check: http://localhost:${PORT}/api/health`);
 });
-// Prevent Render Sleep
 setInterval(() => {
   fetch("https://wms-b7au.onrender.com/api/health")
-    .then(res => res.text())
-    .then(() => console.log("♻️ Server keep-alive ping sent"))
-    .catch(err => console.error("Ping failed:", err.message));
-}, 4 * 60 * 1000); // every 4 min
-
+    .then((res) => res.text())
+    .then(() => console.log("♻️ Anti-sleep ping sent"))
+    .catch((err) => console.log("Ping failed:", err.message));
+}, 4 * 60 * 1000); // every 4 minutes

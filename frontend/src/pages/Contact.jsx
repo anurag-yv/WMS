@@ -452,7 +452,7 @@ select.form-input option {
                 </p>
                 <div className="emergency-phone">
                   <span class="material-symbols-outlined">call</span>
-                  +1 (555) 123-EMER
+                  +91 (555) 123-EMER
                 </div>
                 <p className="emergency-note">24/7 Emergency Response Line</p>
               </div>
