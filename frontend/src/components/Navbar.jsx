@@ -36,8 +36,11 @@ const Navbar = () => {
           border-bottom: 1px solid rgba(0,0,0,0.08);
           position: fixed;
           top: 0;
+          left: 0;
+          right: 0; /* Explicit for mobile */
           z-index: 1000;
           transition: all 0.3s ease;
+          box-shadow: ${isScrolled ? '0 2px 10px rgba(0,0,0,0.1)' : 'none'}; /* Better visibility on scroll */
         }
         .nav-container {
           max-width: 1200px;
@@ -119,27 +122,53 @@ const Navbar = () => {
         .logout-btn:hover { background: #1F2937; transform: translateY(-1px); }
 
         .mobile-menu-btn {
-          display: none; flex-direction: column; gap: 4px;
+          display: none; /* Hidden on desktop */
+          flex-direction: column; gap: 4px;
           background: none; border: none; padding: 8px; cursor: pointer;
+          z-index: 1001; /* Above everything */
         }
-        .mobile-menu-btn span { width: 20px; height: 2px; background: #4B5563; transition: all 0.3s; }
+        .mobile-menu-btn span { 
+          width: 20px; height: 2px; background: #4B5563; transition: all 0.3s; 
+        }
         .mobile-menu-btn.active span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
         .mobile-menu-btn.active span:nth-child(2) { opacity: 0; }
         .mobile-menu-btn.active span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
 
         @media (max-width: 968px) {
-          .nav-links { margin-left: 0 !important; gap: 12px; }
+          .nav-links { 
+            margin-left: 0 !important; 
+            gap: 12px; 
+            flex-direction: column; /* Stack links vertically in menu */
+            width: 100%;
+          }
           .nav-main {
-            position: fixed; top: 72px; left: 0; width: 100%;
-            height: calc(100vh - 72px); background: rgba(255,255,255,0.98);
-            backdrop-filter: blur(20px); flex-direction: column;
-            padding: 40px 24px; gap: 32px; transform: translateX(-100%);
-            transition: transform 0.35s ease; border-top: 1px solid rgba(0,0,0,0.08);
+            position: fixed; 
+            top: 72px; 
+            left: 0; 
+            width: 100%;
+            height: calc(100vh - 72px); 
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(20px); 
+            flex-direction: column;
+            padding: 40px 24px; 
+            gap: 32px; 
+            transform: translateX(-100%);
+            transition: transform 0.35s ease; 
+            border-top: 1px solid rgba(0,0,0,0.08);
           }
           .nav-main.active { transform: translateX(0); }
-          .auth-section, .user-section-pro { flex-direction: column; width: 100%; gap: 16px; }
-          .auth-btn, .logout-btn { width: 100%; padding: 14px; text-align: center; }
-          .mobile-menu-btn { display: flex; }
+          .auth-section, .user-section-pro { 
+            flex-direction: column; 
+            width: 100%; 
+            gap: 16px; 
+          }
+          .auth-btn, .logout-btn { 
+            width: 100%; 
+            padding: 14px; 
+            text-align: center; 
+          }
+          .mobile-menu-btn { display: flex; } /* Show on mobile */
+          .logo { z-index: 1002; } /* Ensure logo stays on top */
         }
       `}</style>
 
@@ -147,7 +176,7 @@ const Navbar = () => {
         <div className="nav-container">
           <Link to="/" className="logo" onClick={closeMenu}>
             EcoWaste
-            <span className="material-symbols-outlined " style={{ fontSize: "35upx" }}>eco</span>
+            <span className="material-symbols-outlined" style={{ fontSize: "35px" }}>eco</span> {/* Fixed 'upx' to 'px' */}
           </Link>
 
           <div className={`nav-main ${isMenuOpen ? "active" : ""}`}>
@@ -163,7 +192,6 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  {/* <li><Link to="/tips" onClick={closeMenu} className={location.pathname === '/tips' ? 'active' : ''}>Recycling Tips</Link></li> */}
                   <li><Link to="/education" onClick={closeMenu} className={location.pathname === '/education' ? 'active' : ''}>Learn</Link></li>
                   <li><Link to="/about" onClick={closeMenu} className={location.pathname === '/about' ? 'active' : ''}>About</Link></li>
                   <li><Link to="/contact" onClick={closeMenu} className={location.pathname === '/contact' ? 'active' : ''}>Contact</Link></li>
@@ -189,8 +217,14 @@ const Navbar = () => {
             )}
           </div>
 
-          <button className={`mobile-menu-btn ${isMenuOpen ? "active" : ""}`} onClick={toggleMenu}>
-            <span></span><span></span><span></span>
+          <button 
+            className={`mobile-menu-btn ${isMenuOpen ? "active" : ""}`} 
+            onClick={toggleMenu}
+            aria-label="Toggle menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
           </button>
         </div>
       </nav>
