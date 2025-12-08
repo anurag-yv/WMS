@@ -116,10 +116,9 @@ const CollectionSchedule = () => {
 
  const api = API.create({
   baseURL: import.meta.env.VITE_API_URL,
-  headers: {
-    Authorization: `Bearer ${getToken()}`
-  }
+  headers: { Authorization: `Bearer ${getToken()}` }
 });
+
 
 
   const showMessage = (text, type = 'success') => setMessage({ text, type });
