@@ -20,7 +20,8 @@ app.use(cors({
   credentials: true
 }));
 
-app.options('*', cors()); // keep this
+// app.options('*', cors()); // keep this
+
 
 
 
@@ -100,3 +101,11 @@ app.listen(PORT, () => {
   console.log(`🔍 Test endpoint: http://localhost:${PORT}/api/test`);
   console.log(`❤️ Health check: http://localhost:${PORT}/api/health`);
 });
+// Prevent Render Sleep
+setInterval(() => {
+  fetch("https://wms-b7au.onrender.com/api/health")
+    .then(res => res.text())
+    .then(() => console.log("♻️ Server keep-alive ping sent"))
+    .catch(err => console.error("Ping failed:", err.message));
+}, 4 * 60 * 1000); // every 4 min
+

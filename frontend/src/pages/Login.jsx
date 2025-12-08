@@ -91,7 +91,7 @@ const Login = () => {
   return (
     <>
       {/* Inline fix for invisible text (works 100% with dark themes & autofill) */}
-      <style jsx>{`
+      <style>{`
         .form-control {
           color: #212529 !important;
           background-color: #ffffff !important;
