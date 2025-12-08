@@ -114,10 +114,13 @@ const CollectionSchedule = () => {
 
   const getToken = () => localStorage.getItem('token');
 
-  const api = API.create({
-    baseURL: process.env.NODE_ENV === 'development' ? 'https://wms-b7au.onrender.com/api' : '/api',
-    headers: { Authorization: `Bearer ${getToken()}` }
-  });
+ const api = API.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  headers: {
+    Authorization: `Bearer ${getToken()}`
+  }
+});
+
 
   const showMessage = (text, type = 'success') => setMessage({ text, type });
 
