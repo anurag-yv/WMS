@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import API from "../api" ;
 import { useAuth } from '../context/AuthContext';
 
 const getCountdown = (targetDateStr) => {
@@ -114,7 +114,7 @@ const CollectionSchedule = () => {
 
   const getToken = () => localStorage.getItem('token');
 
-  const api = axios.create({
+  const api = API.create({
     baseURL: process.env.NODE_ENV === 'development' ? 'https://wms-b7au.onrender.com/api' : '/api',
     headers: { Authorization: `Bearer ${getToken()}` }
   });
