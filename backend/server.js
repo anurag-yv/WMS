@@ -45,8 +45,7 @@ app.get('/api/test', (req, res) => {
   });
 });
 console.log("DEBUG CHECK");
-console.log("process.env.EMAIL_USER =", process.env.EMAIL_USER);
-console.log("process.env.EMAIL_PASS =", process.env.EMAIL_PASS);
+
 
 
 // Health check route
